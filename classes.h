@@ -370,7 +370,7 @@ class _Function                 /* a function details */
     string token_name; 
     public:
         unordered_map<string,_Identifier*> declarations;        /* all local veriables */
-        unordered_map<string,string> parameters;            /* parameters and thier types */
+        unordered_map<string,_Identifier*> parameters;            /* parameters and thier types */
         _Function(string,string);                           
         bool add_parameter(_Identifier*);
         bool add_declaration(_Identifier*);

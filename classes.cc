@@ -471,6 +471,39 @@ void method::print()
 }
 program::program(list<method *> *funlist):funs(funlist) {}
 
+/********** symbol table ***************/
+
+_Identifier::_Identifier(string var_name,string var_type):type(var_type),token_name(var_name){}
+
+_Function::_Function(string func_type,string func_name):type(func_type), token_name(func_name){}
+
+void _Function::change_fname(string N)
+{
+	token_name = N;
+}
+
+bool _Function::add_parameter(_Identifier* var)
+{
+	return parameters.insert(make_pair(var->token_name,var)).second;	
+}
+
+bool _Function::add_declaration(_Identifier* var)
+{
+	return declarations.insert(make_pair(var->token_name,var)).second;
+}
+/*
+bool _GlobalTable::add_function(_Function* func)
+{
+	return Functions.insert(make_pair(func->toke_name,func)).second;
+}*/
+
+/****************** Error details ************************/
+_Error::_Error(int line_no, int err_code, string err_msg): line_no(line_no), error_code(err_code), error_msg(err_msg){}
+void _Error::report_error()
+{
+	cout<<line_no<<": error :"<<error_msg<<endl;
+}
+
 /*void symbol_t::adds(string N,string T)
 {
 	stypes.insert(pair(N,T));

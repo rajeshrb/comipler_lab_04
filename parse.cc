@@ -1700,6 +1700,7 @@ ParserBase::ParserBase()
 
 
 Meta__::SType ParserBase::d_val__;
+Meta__::SType ParserBase::d_val__;
 void Parser::print__()
 {
 // $insert print

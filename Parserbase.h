@@ -9,6 +9,7 @@
 
 // $insert preincludes
 #include "headers.cc"
+#include "headers.cc"
 #include <memory>
 #include <stdexcept>
 #include <type_traits>
@@ -354,6 +355,7 @@ class ParserBase
 
 // $insert STYPE
     typedef Meta__::SType STYPE__;
+	public: static STYPE__  d_val__;
 	public: static STYPE__  d_val__;
 
 

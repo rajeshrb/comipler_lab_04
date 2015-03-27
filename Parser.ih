@@ -4,6 +4,8 @@
 
 // $insert class.h
 #include "Parser.h"
+string type_s = "default";int enable = 1;_Function * _curr;
+#include "definitions.cc"
 #include "definitions.cc"
 
 
