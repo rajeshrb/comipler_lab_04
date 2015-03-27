@@ -20,7 +20,7 @@ method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : b
 %type <Float> FLOAT_CONSTANT
 %type <String> STRING_LITERAL IDENTIFIER 
 %%
-/*jjhkjhkj*/
+
 translation_unit
 	: function_definition
 	{
