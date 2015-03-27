@@ -26,11 +26,12 @@ translation_unit
 	{
 				
 		$1->print();
+		enable =1;
 	} 
 	| translation_unit function_definition 
 	{
 		$2->print();		
-		
+		enable =1;
 	} 
         ;
 
@@ -42,41 +43,81 @@ function_definition
 	;
 
 type_specifier
-	: VOID {$$="void";}	
-    | INT   {$$="int";}
-	| FLOAT {$$="float";}
+	: VOID 
+	{
+		$$="void";
+		if(enable==1){type_s = "void";enable = 0;}
+	}	
+        | INT  
+	{
+		$$="int";
+		if(enable==1){type_s = "int";enable = 0;}
+	}
+	| FLOAT 
+	{
+		$$="float";
+		if(enable==1){type_s = "float";enable = 0;}
+	}
     ;
 
 fun_declarator
 	: IDENTIFIER '(' parameter_list ')' 
 	{
+		$$ = $3;
+		$$->change_faname($1);
+		_curr = $$;
 		//cout<<"fun ";		
-		$$ = new identifier_ast($1);
+		//$$ = new identifier_ast($1);
 	}
         | IDENTIFIER '(' ')' 
 	{
+		$$ = new _Function(type_s,$1);
 		//cout<<$1<<endl;
-		$$ = new identifier_ast($1);
+		//$$ = new identifier_ast($1,type_s);
+		_curr = $$;
 	}
 	;
 
 parameter_list
 	: parameter_declaration 
+	{
+		$$=new _Function(type_s,"default");
+		$$->add_parameter($1);
+	}
 	| parameter_list ',' parameter_declaration 
+	{
+		$$=$1;
+		$$->add_parameter($3);
+	}
 	;
 
 parameter_declaration
 	: type_specifier declarator 
+	{
+		$$=new _Ideentifier($1,$2);
+	}
         ;
 
 declarator
-	: IDENTIFIER 
-	| declarator '[' constant_expression ']' 
+	: IDENTIFIER {$$=$1}
+	
+	| declarator '[' constant_expression ']'
+	 {
+		
+		if($3->_type == "float")
+			{
+			cout<<"The Array Index of \'"<<$1<<"' "<<"can\'t be of any type other than int .\n";
+			}
+		else
+			{
+				$$=$1;
+			}
+	}
         ;
 
 constant_expression 
-        : INT_CONSTANT 
-        | FLOAT_CONSTANT 
+        : INT_CONSTANT {$$ = new intconst($1);$$->_type = "int"}
+        | FLOAT_CONSTANT {$$ = new floatconst($1);$$->_type = "float"}
         ;
 
 compound_statement

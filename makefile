@@ -1,6 +1,6 @@
 all: lex.cc parse.cc main.cc Scanner.h Scannerbase.h Scanner.ih Parser.h Parserbase.h Parser.ih 
 	./sedscript
-#	@sed -i '/#include "Parser.h"/a int no_spaces = 0;' Parser.ih;
+	@sed -i '/#include "Parser.h"/a string type_s = "default";int enable = 1;_Function * _curr;' Parser.ih;
 	@g++   --std=c++0x classes.cc lex.cc parse.cc main.cc ;
 	@./a.out <test-assembly > junk;
 lex.cc: lex.l Scanner.ih 

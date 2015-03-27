@@ -44,6 +44,7 @@ class ExpAst : public abstract_astnode
         string _ftype;
         ExpAst() {}
         virtual void print() {} ;
+        void _print();
 };
 
 /*class arrayRef : public abstract_astnode
@@ -351,18 +352,46 @@ class program
 	public:
 	program(list<method *> *funlist);
 };
-//extern map<string,float> idTable;
-//extern program *root;
 
-/*
-class symbol_t
+
+/********** symbol table ***************/
+
+class _Identifier               /* variable */
 {
-public:
-    string f_name;
-    string r_type;
-    unordered_map <string,string> stypes;
-    void adds(string N,string T);
-};*/
+    public:
+        string type;        
+        string token_name;
+        _Identifier(string,string);
+};
+
+class _Function                 /* a function details */
+{
+    string type;                
+    string token_name; 
+    public:
+        unordered_map<string,_Identifier*> declarations;        /* all local veriables */
+        unordered_map<string,string> parameters;            /* parameters and thier types */
+        _Function(string,string);                           
+        bool add_parameter(_Identifier*);
+        bool add_declaration(_Identifier*);
+        void change_fname(string);
+};
+
+
+unordered_map<string,_Function*> Functions;
+
+//_Function * curr;
+/************ Error details ******************/
+class _Error
+{
+    int line_no;                /* line at which error occured */
+    int error_code;         /* kind of error, 0 for non-declaration, 1 for re-declaration, 2 for type incompatibility, 3 for  syntax error, 4 for floating point*/
+    string error_msg;           /* error msg to be printed */
+    public:
+        _Error(int,int,string);             /* create a instance of error */
+        void report_error();                /*  report the error */
+};
+
 /*////////////////////////////////////////////
 //////////////////    END      ///////////////
 ////////////////////////////////////////////*/

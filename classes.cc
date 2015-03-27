@@ -12,6 +12,19 @@ for(int i=0;i<n;i++)
 cout << " ";
 }
 }
+void ExpAst::_print()
+{
+	if(_type == _ftype)
+	{
+		print();
+	}
+	else
+	{
+		cout<<"TO_"<<_ftype<<"(";
+		print();
+		cout<<")";
+	}
+}
 
 block_ast::block_ast(StmtAst *S)
 {
@@ -83,9 +96,9 @@ void ass_ast::print()
 	{
 	print_space(no_spaces);
 	cout<<"(Assign_Exp(";
-	left->print();
+	left->_print();
 	cout<<")(";
-	right->print();
+	right->_print();
 	cout<<"))";
 	}
 }
@@ -99,7 +112,7 @@ void return_ast::print()
 {
 	print_space(no_spaces);
 	cout<<"(Return_Exp(";
-	exp->print();
+	exp->_print();
 	cout<<"))";
 }
 
@@ -114,7 +127,7 @@ void if_ast::print()
 	print_space(no_spaces);
 	cout<<"(If((";
 	no_spaces+=4;
-	exp->print();
+	exp->_print();
 	cout<<") \n";
 	st1->print();
 	st2->print();
@@ -135,7 +148,7 @@ void while_ast::print()
 {
 	print_space(no_spaces);
 	cout<<"(While((";
-	exp->print();
+	exp->_print();
 	cout<<")\n";
 	no_spaces+=8;
 	st->print();
@@ -183,7 +196,7 @@ void exps::print()
 	for(it = Elist.begin();it != Elist.end();it++)
 	{
 		cout<<"(";
-		(*it)->print();
+		(*it)->_print();
 		cout<<") ";
 	}
 }
@@ -211,24 +224,11 @@ unary_op_ast::unary_op_ast(ExpAst *E)
 funcall_ast::funcall_ast(ExpAst *explist,identifier_ast *S):expslist(explist),funname(S){} 
 void funcall_ast::print()
 {
-	if(_type != _ftype)
-	{
-		cout<<"TO_"<<_ftype<<"(";
-		cout<<"Fun_Call \"";
-		funname->print();
-		cout<<"\" ";
-		expslist->print();
-		cout<<")";
-	}
-	else
-	{
+	
 	cout<<"Fun_Call \"";
 	funname->print();
 	cout<<"\" ";
 	expslist->print();
-	}
-	
-	
 }
 //end
 
@@ -239,16 +239,9 @@ floatconst::floatconst(float val)
 }
 void floatconst::print()
 {
-	if(_type != _ftype)
-	{
-		cout<<"TO_"<<_ftype<<"(";
+	
 		cout<<"FloatConst "<<num;
-		cout<<")";
-	}
-	else
-	{
-		cout<<"FloatConst "<<num;
-	}
+	
 }
 
 intconst::intconst(int val)
@@ -257,16 +250,9 @@ intconst::intconst(int val)
 }
 void intconst::print()
 {
-	if(_type != _ftype)
-	{
-		cout<<"TO_"<<_ftype<<"(";
+	
 		cout<<"IntConst "<<num;
-		cout<<")";
-	}
-	else
-	{
-		cout<<"IntConst "<<num;
-	}
+	
 }
 
 stringconst::stringconst(string S)
@@ -284,13 +270,6 @@ identifier_ast::identifier_ast(string I)
 }
 void identifier_ast::print()
 {
-	if(_type!=_ftype)
-	{
-		cout<<"TO_"<<_ftype<<"(";
-		cout << "Id \""<<id<<"\"";
-		cout<<")";
-	}
-	else
 	cout << "Id \""<<id<<"\"";
 }
 //arrayref
@@ -304,9 +283,9 @@ void index_ast::print()
 	cout<<"Index (";
 	ar->print();
 	cout<<") (";
-	exp->print();
+	exp->_print();
 	cout<<")";
-}
+} 
 //ed
 /*////////////////////////////////////////////
 //////////  children of op_ast ///////////////
@@ -316,9 +295,9 @@ or_ast::or_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void or_ast::print() 
 {
 	cout << "Or (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -326,9 +305,9 @@ and_ast::and_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void and_ast::print() 
 {
 	cout << "And (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -336,9 +315,9 @@ eq_op_ast::eq_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void eq_op_ast::print() 
 {
 	cout << "EQ_OP (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -347,9 +326,9 @@ ne_op_ast::ne_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void ne_op_ast::print() 
 {
 	cout << "NE_OP (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -358,9 +337,9 @@ lt_ast::lt_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void lt_ast::print() 
 {
 	cout << "LT (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -368,9 +347,9 @@ gt_ast::gt_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void gt_ast::print() 
 {
 	cout << "GT (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -379,9 +358,9 @@ le_op_ast::le_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void le_op_ast::print() 
 {
 	cout << "LE_OP (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -390,9 +369,9 @@ ge_op_ast::ge_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void ge_op_ast::print() 
 {
 	cout << "GE_OP (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -401,9 +380,9 @@ plus_ast::plus_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void plus_ast::print() 
 {
 	cout << "PLUS (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -412,9 +391,9 @@ minus_ast::minus_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void minus_ast::print() 
 {
 	cout << "MINUS (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -423,9 +402,9 @@ mult_ast::mult_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void mult_ast::print() 
 {
 	cout << "MULT (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -434,9 +413,9 @@ devide_ast::devide_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void devide_ast::print() 
 {
 	cout << "DEVIDE (";
-	left->print();
+	left->_print();
 	cout <<") (";
-	right->print();
+	right->_print();
 	cout<<")";
 	
 }
@@ -447,9 +426,9 @@ assign_ast::assign_ast(ExpAst *L,ExpAst *R):op_ast(L,R) {}
 void assign_ast::print()
 {
 	cout<<"Assign_Exp(";
-	left->print();
+	left->_print();
 	cout<<")(";
-	right->print();
+	right->_print();
 	cout<<")";
 }
 /*////////////////////////////////////////////
@@ -460,7 +439,7 @@ uminus_ast::uminus_ast(ExpAst *E):unary_op_ast(E){}
 void uminus_ast::print()
 {
 	cout<<"UMINUS (";
-	exp->print();
+	exp->_print();
 	cout<<")";
 }
 
@@ -468,7 +447,7 @@ not_ast::not_ast(ExpAst *E):unary_op_ast(E){}
 void not_ast::print()
 {
 	cout<<"NOT (";
-	exp->print();
+	exp->_print();
 	cout<<")";
 }
 
@@ -476,7 +455,7 @@ pp_ast::pp_ast(ExpAst *E):unary_op_ast(E){}
 void pp_ast::print()
 {
 	cout<<"PP (";
-	exp->print();
+	exp->_print();
 	cout<<")";
 }
 
