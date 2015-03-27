@@ -1,16 +1,15 @@
-#include <iostream>
 #include "classes.h"
-#include <cstdio>
-#include <unordered_map>
+
 using namespace std;
 int no_spaces = 0;
 program * root;
+
 void print_space(int n)
 {
-for(int i=0;i<n;i++)
-{
-cout << " ";
-}
+	for(int i=0;i<n;i++)
+	{
+		cout << " ";
+	}
 }
 
 block_ast::block_ast(StmtAst *S)
@@ -25,26 +24,29 @@ void block_ast::add(StmtAst *S)
 
 void block_ast::print()
 {
-if(stlist.begin() == stlist.end())
-{
-print_space(no_spaces);
-cout<<"(empty)";
-}
-else {
-print_space(no_spaces);
-cout<<"(BLOCK [\n";
-no_spaces +=8; 
-list<StmtAst *>::iterator it;
+	if(stlist.begin() == stlist.end())
+	{
+		print_space(no_spaces);
+		cout<<"(empty)";
+	}
+	else
+	{
+		print_space(no_spaces);
+		cout<<"(BLOCK [";
+		no_spaces +=8; 
+		list<StmtAst *>::iterator it;
 
-for(it = stlist.begin();it!=stlist.end();it++)
-{
-(*it)->print();
-cout<<endl;
-}
-print_space(no_spaces);
-cout<<"])\n";
-no_spaces -=8; 
-}
+		for(it = stlist.begin();it!=stlist.end();it++)
+		{
+			cout<<"(";
+			(*it)->print();
+			cout<<")";
+			cout<<endl;
+			print_space(no_spaces);
+		}
+		cout<<"])\n";
+		no_spaces -=8; 
+	}
 }
 
 
@@ -76,17 +78,16 @@ void ass_ast::print()
 {
 	if(left==NULL && right == NULL)
 	{
-		print_space(no_spaces);
+		//print_space(no_spaces);
 		cout<<"(empty)";
 	}
 	else
 	{
-	print_space(no_spaces);
-	cout<<"(Assign_Exp(";
+	cout<<"Assign_Exp(";
 	left->print();
 	cout<<")(";
 	right->print();
-	cout<<"))";
+	cout<<")";
 	}
 }
 
@@ -97,10 +98,9 @@ return_ast::return_ast(ExpAst *E)
 }
 void return_ast::print()
 {
-	print_space(no_spaces);
-	cout<<"(Return_Exp(";
+	cout<<"Return_Exp(";
 	exp->print();
-	cout<<"))";
+	cout<<")";
 }
 
 if_ast::if_ast(ExpAst *E,StmtAst *S1,StmtAst *S2)
@@ -111,19 +111,16 @@ if_ast::if_ast(ExpAst *E,StmtAst *S1,StmtAst *S2)
 }
 void if_ast::print()
 {
-	print_space(no_spaces);
-	cout<<"(If((";
-	no_spaces+=4;
+	cout<<"If((";
+	no_spaces+=3;
 	exp->print();
 	cout<<") \n";
 	st1->print();
 	st2->print();
 	//print_space(no_spaces);
-	cout<<endl;
+	no_spaces-=3;
 	print_space(no_spaces);
-	cout<<"))";
-	no_spaces-=4;
-	
+	cout<<")";	
 }
 
 while_ast::while_ast(ExpAst *E,StmtAst *S)
@@ -133,15 +130,14 @@ while_ast::while_ast(ExpAst *E,StmtAst *S)
 }
 void while_ast::print()
 {
-	print_space(no_spaces);
-	cout<<"(While((";
+	cout<<"While((";
 	exp->print();
 	cout<<")\n";
-	no_spaces+=8;
+	no_spaces+=7;
 	st->print();
 	print_space(no_spaces);
-	cout<<"))";
-	no_spaces-=8;
+	cout<<")";
+	no_spaces-=7;
 }
 
 for_ast::for_ast(ExpAst *E1,ExpAst *E2,ExpAst *E3,StmtAst *S)
@@ -153,11 +149,10 @@ for_ast::for_ast(ExpAst *E1,ExpAst *E2,ExpAst *E3,StmtAst *S)
 }
 void for_ast::print()
 {
-	print_space(no_spaces);
-	cout<<"(For((";
+	cout<<"For((";
 	exp1->print();
 	cout<<")\n";
-	no_spaces+=6;
+	no_spaces+=5;
 	print_space(no_spaces);
 	cout<<"(";
 	exp2->print();
@@ -166,16 +161,14 @@ void for_ast::print()
 	cout<<"(";
 	exp3->print();
 	cout<<")\n";
-	//print_space(no_spaces);
-	//cout<<"(";
+	print_space(no_spaces);
+	cout<<"(";
 	st->print();
 	cout<<"))";
-	no_spaces-=6;
+	no_spaces-=5;
 }
 
-/*////////////////////////////////////////////
-//////////  children of ExpAst ///////////////
-////////////////////////////////////////////*/
+/*************  children of ExpAst ************/
 
 void exps::print()
 {
@@ -187,6 +180,7 @@ void exps::print()
 		cout<<") ";
 	}
 }
+
 void exps::addE(ExpAst *E)
 {
 	Elist.push_back(E);
@@ -207,24 +201,25 @@ unary_op_ast::unary_op_ast(ExpAst *E)
 {
 	exp = E;
 }
+
 // Function call
 funcall_ast::funcall_ast(ExpAst *explist,identifier_ast *S):expslist(explist),funname(S){} 
+
 void funcall_ast::print()
 {
 	cout<<"Fun_Call \"";
 	funname->print();
 	cout<<"\" ";
-	expslist->print();
-	
-	
-	
+	expslist->print();	
 }
+
 //end
 
 floatconst::floatconst(float val)
 {
 	num = val;
 }
+
 void floatconst::print()
 {
 	cout<<"FloatConst "<<num;
@@ -234,6 +229,7 @@ intconst::intconst(int val)
 {
 	num = val;
 }
+
 void intconst::print()
 {
 	cout<<"IntConst "<<num;
@@ -243,6 +239,7 @@ stringconst::stringconst(string S)
 {
 	s = S;
 }
+
 void stringconst::print()
 {
 	cout<<"StringLiteral "<<s;
@@ -252,10 +249,12 @@ identifier_ast::identifier_ast(string I)
 {
 	id = I;
 }
+
 void identifier_ast::print()
 {
 	cout << "Id \""<<id<<"\"";
 }
+
 //arrayref
 index_ast::index_ast(ArrayRef_ast *A,ExpAst *E)
 {
@@ -270,43 +269,45 @@ void index_ast::print()
 	exp->print();
 	cout<<")";
 }
-//ed
-/*////////////////////////////////////////////
-//////////  children of op_ast ///////////////
-////////////////////////////////////////////*/
+//end
+
+/****** children of op_ast *********/
 
 or_ast::or_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void or_ast::print() 
 {
 	cout << "Or (";
 	left->print();
 	cout <<") (";
 	right->print();
-	cout<<")";
-	
+	cout<<")";	
 }
+
 and_ast::and_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void and_ast::print() 
 {
 	cout << "And (";
 	left->print();
 	cout <<") (";
 	right->print();
-	cout<<")";
-	
+	cout<<")";	
 }
+
 eq_op_ast::eq_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void eq_op_ast::print() 
 {
 	cout << "EQ_OP (";
 	left->print();
 	cout <<") (";
 	right->print();
-	cout<<")";
-	
+	cout<<")";	
 }
 
 ne_op_ast::ne_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void ne_op_ast::print() 
 {
 	cout << "NE_OP (";
@@ -318,16 +319,18 @@ void ne_op_ast::print()
 }
 
 lt_ast::lt_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void lt_ast::print() 
 {
 	cout << "LT (";
 	left->print();
 	cout <<") (";
 	right->print();
-	cout<<")";
-	
+	cout<<")";	
 }
+
 gt_ast::gt_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void gt_ast::print() 
 {
 	cout << "GT (";
@@ -335,18 +338,17 @@ void gt_ast::print()
 	cout <<") (";
 	right->print();
 	cout<<")";
-	
 }
 
 le_op_ast::le_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void le_op_ast::print() 
 {
 	cout << "LE_OP (";
 	left->print();
 	cout <<") (";
 	right->print();
-	cout<<")";
-	
+	cout<<")";	
 }
 
 ge_op_ast::ge_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
@@ -356,11 +358,11 @@ void ge_op_ast::print()
 	left->print();
 	cout <<") (";
 	right->print();
-	cout<<")";
-	
+	cout<<")";	
 }
 
 plus_ast::plus_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void plus_ast::print() 
 {
 	cout << "PLUS (";
@@ -368,44 +370,42 @@ void plus_ast::print()
 	cout <<") (";
 	right->print();
 	cout<<")";
-	
 }
 
 minus_ast::minus_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void minus_ast::print() 
 {
 	cout << "MINUS (";
 	left->print();
 	cout <<") (";
 	right->print();
-	cout<<")";
-	
+	cout<<")";	
 }
 
 mult_ast::mult_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void mult_ast::print() 
 {
 	cout << "MULT (";
 	left->print();
 	cout <<") (";
 	right->print();
-	cout<<")";
-	
+	cout<<")";	
 }
 
 devide_ast::devide_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
+
 void devide_ast::print() 
 {
 	cout << "DEVIDE (";
 	left->print();
 	cout <<") (";
 	right->print();
-	cout<<")";
-	
+	cout<<")";	
 }
 
 assign_ast::assign_ast(ExpAst *L,ExpAst *R):op_ast(L,R) {}
-
 
 void assign_ast::print()
 {
@@ -415,11 +415,11 @@ void assign_ast::print()
 	right->print();
 	cout<<")";
 }
-/*////////////////////////////////////////////
-//////////  children of unary_op_ast /////////
-////////////////////////////////////////////*/
+
+/******** children of unary_op_ast ****************/
 
 uminus_ast::uminus_ast(ExpAst *E):unary_op_ast(E){}
+
 void uminus_ast::print()
 {
 	cout<<"UMINUS (";
@@ -428,6 +428,7 @@ void uminus_ast::print()
 }
 
 not_ast::not_ast(ExpAst *E):unary_op_ast(E){}
+
 void not_ast::print()
 {
 	cout<<"NOT (";
@@ -436,6 +437,7 @@ void not_ast::print()
 }
 
 pp_ast::pp_ast(ExpAst *E):unary_op_ast(E){}
+
 void pp_ast::print()
 {
 	cout<<"PP (";
@@ -444,24 +446,45 @@ void pp_ast::print()
 }
 
 method::method(identifier_ast *I,block_ast *stmtlist):id(I),block(stmtlist){}
+
 void method::print()
 {
-	cout<<"Function : ";
+	cout<<"New Method : ";
 	id->print();
 	cout<<"\n";
-	//cout<<"hbhj";
 	block->print();
-	cout<<"\n";
 }
-program::program(list<method *> *funlist):funs(funlist) {}
-/*
-template <typename Tmp>
-void symbol_t::adds(string N,string T,Tmp val)
-{
-	svalues.insert(pair(N,val)); 
-	stypes.insert(pair(N,T));
-}
-symbol_t global;
-unordered_map <string,symbol_t *> f_ptr;
 
-*/
+program::program(list<method *> *funlist):funs(funlist) {}
+
+/********** symbol table ***************/
+
+_Identifier::_Identifier(string var_name,string var_type):type(var_type),toke_name(var_namer){}
+
+_Function::_Function(string func_type,string func_name):type(func_type), toke_name(func_name){}
+
+bool _Function::add_parameter(string par_type,string par_name)
+{
+	return parameters.insert(make_pair(par_name,par_type)).second;	
+}
+
+bool _Function::add_declaration(_Identifier* var)
+{
+	return declarations.insert(make_pair(var->toke_name,var)).second;
+}
+
+bool _GlobalTable::add_function(_Function* func)
+{
+	return Functions.insert(make_pair(func->toke_name,func)).second;
+}
+
+/****************** Error details ************************/
+_Error::_Error(int line_no, int err_code, string err_msg): line_no(line_no), error_code(err_code), error_msg(err_msg){}
+void _Error::report_error()
+{
+	cout<<line_no<<": error :"<<error_msg<<endl;
+}
+
+/***************** global variables ********************/
+_GlobalTable* Gtable=new _GlobalTable();
+vector<_Error*> AllErrors;
