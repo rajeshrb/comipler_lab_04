@@ -18,24 +18,19 @@ method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : b
 %type <Char> unary_operator
 %type <Int> INT_CONSTANT
 %type <Float> FLOAT_CONSTANT
-%type <String> STRING_LITERAL IDENTIFIER 
+%type <String> STRING_LITERAL IDENTIFIER type_specifier
 %%
 
 translation_unit
 	: function_definition
 	{
-		//cout<<($1==NULL)<<endl;		
+				
 		$1->print();
-		//$$->push_back($1);
-		//cout<<"trans_unit-A"<<endl;		
-		//cout<<"trans_unit"<<endl;
 	} 
 	| translation_unit function_definition 
 	{
 		$2->print();		
-		//$$ = $1;
-		//$1 -> push_back($2);
-		//cout<<"trans_unit"<<endl;
+		
 	} 
         ;
 
@@ -47,9 +42,9 @@ function_definition
 	;
 
 type_specifier
-	: VOID 	
-    | INT   
-	| FLOAT 
+	: VOID {$$="void";}	
+    | INT   {$$="int";}
+	| FLOAT {$$="float";}
     ;
 
 fun_declarator
@@ -131,7 +126,14 @@ statement
 	} 
         | RETURN expression ';'	
 	{
-		$$ = new return_ast($2);
+		if($2.type == "int")
+		{
+			$$ = new return_ast($2);
+		}
+		else
+		{
+			cout << "Error in return statement at line :";
+		}
 	} 
         ;
 
@@ -142,7 +144,27 @@ assignment_statement
 	} 								
 	|  l_expression '=' expression ';'
 	{
-		$$ = new ass_ast($1,$3);
+		if($1.type == $3.type)
+		{ 
+			$$ = new ass_ast($1,$3);
+		}
+		else
+		{
+			if($1.type == "int" and $3.type=="float")
+			{
+				$1.num = (int)($3.num);
+				$$ = new ass_ast($1,$3);
+			}
+			else 
+			{
+				if($1.type == "float" and $3.type=="int")
+				{
+					$$ = new ass_ast($1,$3);
+				}
+				else cout<<"error at line : type mismatch . \n";
+			}
+		}	
+
 	} 	
 	;
 

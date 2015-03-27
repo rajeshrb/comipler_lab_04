@@ -40,6 +40,7 @@ class ExpAst : public abstract_astnode
 {
     public:
         float num;
+        string type;
         ExpAst() {}
         virtual void print() {} ;
 };
