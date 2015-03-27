@@ -1,5 +1,6 @@
 %%
-[ \t\n]+ {}
+[ \t]+ {}
+"\n" 													{no_lines++;}
 (\/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/)|(\/\/.\*) return Parser::COMMENTS;
 "{" 													return '{';
 "}" 													return '}';

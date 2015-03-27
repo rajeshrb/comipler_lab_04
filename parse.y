@@ -5,7 +5,7 @@
 %token VOID INT FLOAT FLOAT_CONSTANT INT_CONSTANT AND_OP OR_OP EQ_OP NE_OP LE_OP GE_OP STRING_LITERAL IF ELSE WHILE FOR RETURN IDENTIFIER INC_OP COMMENTS
 
 %polymorphic exp : ExpAst* ; stmt : StmtAst*; Int : int; Float : float; String : string; expsl : exps * ; funs : list<method *>* ; fun :
-method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : block_ast *;
+method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : block_ast *; Identifier : _Identifier *;
 
 %type <fun> function_definition
 %type <funs> translation_unit
@@ -18,7 +18,8 @@ method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : b
 %type <Char> unary_operator
 %type <Int> INT_CONSTANT
 %type <Float> FLOAT_CONSTANT
-%type <String> STRING_LITERAL IDENTIFIER type_specifier
+%type <String> STRING_LITERAL IDENTIFIER type_specifier declarator
+%type <Identifier> parameter_declaration
 %%
 
 translation_unit
@@ -63,50 +64,51 @@ type_specifier
 fun_declarator
 	: IDENTIFIER '(' parameter_list ')' 
 	{
-		$$ = $3;
-		$$->change_faname($1);
-		_curr = $$;
-		//cout<<"fun ";		
-		//$$ = new identifier_ast($1);
+		//$$ = $3;
+		//_curr = $$;
+		//cout<<"fun ";	
+		_curr->change_fname($1);	
+		$$ = new identifier_ast($1);
 	}
         | IDENTIFIER '(' ')' 
 	{
-		$$ = new _Function(type_s,$1);
+		_curr = new _Function(type_s,$1);
 		//cout<<$1<<endl;
-		//$$ = new identifier_ast($1,type_s);
-		_curr = $$;
+		$$ = new identifier_ast($1);
+		//_curr = $$;
 	}
 	;
 
 parameter_list
 	: parameter_declaration 
 	{
-		$$=new _Function(type_s,"default");
-		$$->add_parameter($1);
+		
+		_curr=new _Function(type_s,"default");		
+		_curr->add_parameter($1);
 	}
 	| parameter_list ',' parameter_declaration 
 	{
-		$$=$1;
-		$$->add_parameter($3);
+		
+		_curr->add_parameter($3);
 	}
 	;
 
 parameter_declaration
 	: type_specifier declarator 
 	{
-		$$=new _Ideentifier($1,$2);
+		$$=new _Identifier($1,$2);
 	}
         ;
 
 declarator
-	: IDENTIFIER {$$=$1}
+	: IDENTIFIER {$$=$1;}
 	
 	| declarator '[' constant_expression ']'
 	 {
 		
 		if($3->_type == "float")
 			{
-			cout<<"The Array Index of \'"<<$1<<"' "<<"can\'t be of any type other than int .\n";
+			cout<<no_lines<<": error : The Array Index of \'"<<$1<<"' "<<"can\'t be of any type other than int in line.\n";
 			}
 		else
 			{
@@ -116,8 +118,8 @@ declarator
         ;
 
 constant_expression 
-        : INT_CONSTANT {$$ = new intconst($1);$$->_type = "int"}
-        | FLOAT_CONSTANT {$$ = new floatconst($1);$$->_type = "float"}
+        : INT_CONSTANT {$$ = new intconst($1);$$->_type = "int";}
+        | FLOAT_CONSTANT {$$ = new floatconst($1);$$->_type = "float";}
         ;
 
 compound_statement

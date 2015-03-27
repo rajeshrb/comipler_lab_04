@@ -1,3 +1,4 @@
+0: error : The Array Index of 'a' can't be of any type other than int in line.
 Function : Id "main"
 (BLOCK [
         (If((LT (Id "x") (Id "y")) 

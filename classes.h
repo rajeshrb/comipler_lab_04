@@ -378,7 +378,7 @@ class _Function                 /* a function details */
 };
 
 
-unordered_map<string,_Function*> Functions;
+extern unordered_map<string,_Function*> Functions;
 
 //_Function * curr;
 /************ Error details ******************/
