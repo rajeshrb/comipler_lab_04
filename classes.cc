@@ -475,6 +475,11 @@ program::program(list<method *> *funlist):funs(funlist) {}
 
 _Identifier::_Identifier(string var_name,string var_type):type(var_type),token_name(var_name){}
 
+void _Identifier::print()
+{
+	cout<<type<<" "<<token_name<<endl;
+}
+
 _Function::_Function(string func_type,string func_name):type(func_type), token_name(func_name){}
 
 void _Function::change_fname(string N)
@@ -491,6 +496,23 @@ bool _Function::add_declaration(_Identifier* var)
 {
 	return declarations.insert(make_pair(var->token_name,var)).second;
 }
+
+void _Function::print()
+{
+	unordered_map<string,_Identifier*>::iterator it;
+	cout<<"Function parameters\n";
+	for(it=parameters.begin(); it!=parameters.end(); it++)
+	{
+		it->second->print();
+	}
+
+	cout<<"Function local variables\n";
+	for(it=declarations.begin(); it!=declarations.end(); it++)
+	{
+		it->second->print();
+	}
+}
+
 /*
 bool _GlobalTable::add_function(_Function* func)
 {

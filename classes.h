@@ -194,9 +194,9 @@ public:
 
 class identifier_ast : public ArrayRef_ast
 {
-protected:
-    string id;
+    
 public:
+    string id;
     identifier_ast(string I);
     void print();
     ~identifier_ast();
@@ -362,6 +362,7 @@ class _Identifier               /* variable */
         string type;        
         string token_name;
         _Identifier(string,string);
+        void print();
 };
 
 class _Function                 /* a function details */
@@ -375,6 +376,7 @@ class _Function                 /* a function details */
         bool add_parameter(_Identifier*);
         bool add_declaration(_Identifier*);
         void change_fname(string);
+        void print();
 };
 
 

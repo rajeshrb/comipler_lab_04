@@ -25,13 +25,14 @@ method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : b
 translation_unit
 	: function_definition
 	{
-				
-		$1->print();
+		_curr->print();	
+		//$1->print();
 		enable =1;
 	} 
 	| translation_unit function_definition 
 	{
-		$2->print();		
+		_curr->print();		
+		//$2->print();		
 		enable =1;
 	} 
         ;
@@ -39,7 +40,14 @@ translation_unit
 function_definition
 	: type_specifier fun_declarator compound_statement 
 	{
-		$$=new method($2,$3);
+		if(Functions.insert(make_pair($2->id,_curr)).second)
+		{
+			$$=new method($2,$3);
+		}
+		else
+		{
+			cout<<no_lines<<" : error : "<<$2->id<<" Has been Declared previously . \n";
+		}
 	} 
 	;
 
@@ -48,16 +56,19 @@ type_specifier
 	{
 		$$="void";
 		if(enable==1){type_s = "void";enable = 0;}
+		else _vtype = "void";
 	}	
         | INT  
 	{
 		$$="int";
 		if(enable==1){type_s = "int";enable = 0;}
+		else _vtype = "int";
 	}
 	| FLOAT 
 	{
 		$$="float";
 		if(enable==1){type_s = "float";enable = 0;}
+		else _vtype = "float";
 	}
     ;
 
@@ -96,7 +107,19 @@ parameter_list
 parameter_declaration
 	: type_specifier declarator 
 	{
-		$$=new _Identifier($1,$2);
+		string s="";
+		//cout<<_dima<<endl;
+		for(int i=0;i<_dima;i++)
+		{
+			s+="(array ";
+		}
+		s=s+$1;
+		for(int i=0;i<_dima;i++)
+		{
+			s+=") ";
+		}
+		$$=new _Identifier($2,s);
+		_dima=0;
 	}
         ;
 
@@ -113,6 +136,7 @@ declarator
 		else
 			{
 				$$=$1;
+				_dima++;
 			}
 	}
         ;
@@ -169,15 +193,15 @@ statement
 	} 
         | RETURN expression ';'	
 	{
-	/*	if($2.type == "int")
+		if($2->_type == type_s)
 		{
 			$$ = new return_ast($2);
 		}
 		else
 		{
-			cout << "Error in return statement at line :";
-		}*/
-		$$ = new return_ast($2);
+			cout <<no_line<<" : error : return type error \n";
+		}
+		
 	} 
         ;
 
@@ -189,26 +213,29 @@ assignment_statement
 	|  l_expression '=' expression ';'
 	{
 		$$ = new ass_ast($1,$3);
-		/*if($1.type == $3.type)
+		if($1._type == $3._type)
 		{ 
 			$$ = new ass_ast($1,$3);
 		}
 		else
 		{
-			if($1.type == "int" and $3.type=="float")
+			if($1->_type == "int" and $3->_type=="float")
 			{
-				$1.num = (int)($3.num);
+				$3->_ftype="int";
+				$1->num = (int)($3->num);
 				$$ = new ass_ast($1,$3);
 			}
 			else 
 			{
-				if($1.type == "float" and $3.type=="int")
+				if($1->_type == "float" and $3->_type=="int")
 				{
+					$3->_ftype="float";
+					$1->num = (float)($3->num);
 					$$ = new ass_ast($1,$3);
 				}
-				else cout<<"error at line : type mismatch . \n";
+				else cout<<no_lines<<" : error : expected right operand type is "<<$1->_type<<" but given is "<<$3->_type<<".\n";
 			}
-		}	*/
+		}
 
 	} 	
 	;
@@ -428,5 +455,35 @@ declaration
 
 declarator_list
 	: declarator
-	| declarator_list ',' declarator 
+	{
+		string s="";
+		//cout<<_dima<<endl;
+		for(int i=0;i<_dima;i++)
+		{
+			s+="(array ";
+		}
+		s=s+_vtype;
+		for(int i=0;i<_dima;i++)
+		{
+			s+=") ";
+		}
+		_curr->add_declaration(new _Identifier($1,s));
+		_dima=0;
+	}
+	| declarator_list ',' declarator
+	{
+		string s="";
+		//cout<<_dima<<endl;
+		for(int i=0;i<_dima;i++)
+		{
+			s+="(array ";
+		}
+		s=s+_vtype;
+		for(int i=0;i<_dima;i++)
+		{
+			s+=") ";
+		}
+		_curr->add_declaration(new _Identifier($3,s));
+		_dima=0;
+	}
 	;
