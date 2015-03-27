@@ -1,0 +1,9 @@
+if [ -e Parser.ih ] 
+  then rm Parser.ih;
+fi
+if [ -e Parserbase.h ] 
+  then rm Parserbase.h;
+fi
+if [ -e Parser.h ]
+  then rm Parser.h;
+fi

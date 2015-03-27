@@ -1,0 +1,10 @@
+if [ -e Scanner.ih ] 
+  then rm Scanner.ih;
+fi
+if [ -e Parser.ih ] 
+  then rm Parser.ih;
+fi
+if [ -e Parserbase.h ] 
+  then rm Parserbase.h;
+fi
+

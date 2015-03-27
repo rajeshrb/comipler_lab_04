@@ -1,0 +1,28 @@
+Function : Id "main"
+(BLOCK [
+        (If((LT (Id "x") (Id "y")) 
+            (BLOCK [
+                    (Assign_Exp(Id "x")(Index (Id "z") (IntConst 0)))
+                    (Assign_Exp(Id "y")(Fun_Call "Id "g"" (Id "a") (Id "b") ))
+                    ])
+            (empty)
+            ))
+        (While((EQ_OP (Id "j") (IntConst 0))
+                (BLOCK [
+                        (Assign_Exp(Id "j")(PLUS (Id "j") (IntConst 1)))
+                        ])
+                ))
+        (For((Assign_Exp(Id "i")(IntConst 0))
+              (LT (Id "i") (IntConst 10))
+              (PP (Id "i"))
+              (empty)))
+        (Return_Exp(IntConst 0))
+        ])
+
+Function : Id "print"
+(BLOCK [
+        (Assign_Exp(Id "m")(Id "k"))
+        (Assign_Exp(Index (Index (Id "a") (IntConst 4)) (IntConst 5))(Fun_Call "Id "f"" (IntConst 1) (StringLiteral "dhhd") ))
+        (Return_Exp(IntConst 0))
+        ])
+

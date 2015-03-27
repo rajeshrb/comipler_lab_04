@@ -1,0 +1,27 @@
+int main()
+{
+	int x;
+	int z[10];
+	float y;
+	if(x<y)
+	{
+		x=z[0]; 
+		y= g(a,b);
+	} 
+	else ;	
+	
+	while(j==0)
+	{
+	j=j+1;
+	}
+for(i=0; i<10; i++);
+	return 0;
+}
+void print()
+{
+	int k;
+	float m;
+	m=k;
+	a[4][5]=f(1,"dhhd");
+	return 0;
+}
