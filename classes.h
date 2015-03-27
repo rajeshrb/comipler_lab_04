@@ -349,6 +349,7 @@ class program
 	public:
 	program(list<method *> *funlist);
 };
+
 //extern map<string,float> idTable;
 //extern program *root;
 /*
