@@ -126,14 +126,15 @@ statement
 	} 
         | RETURN expression ';'	
 	{
-		if($2.type == "int")
+	/*	if($2.type == "int")
 		{
 			$$ = new return_ast($2);
 		}
 		else
 		{
 			cout << "Error in return statement at line :";
-		}
+		}*/
+		$$ = new return_ast($2);
 	} 
         ;
 
@@ -144,7 +145,8 @@ assignment_statement
 	} 								
 	|  l_expression '=' expression ';'
 	{
-		if($1.type == $3.type)
+		$$ = new ass_ast($1,$3);
+		/*if($1.type == $3.type)
 		{ 
 			$$ = new ass_ast($1,$3);
 		}
@@ -163,7 +165,7 @@ assignment_statement
 				}
 				else cout<<"error at line : type mismatch . \n";
 			}
-		}	
+		}	*/
 
 	} 	
 	;

@@ -40,7 +40,8 @@ class ExpAst : public abstract_astnode
 {
     public:
         float num;
-        string type;
+        string _type;
+        string _ftype;
         ExpAst() {}
         virtual void print() {} ;
 };
@@ -352,16 +353,15 @@ class program
 };
 //extern map<string,float> idTable;
 //extern program *root;
+
 /*
-template <typename Tmp>
 class symbol_t
 {
 public:
     string f_name;
     string r_type;
     unordered_map <string,string> stypes;
-    unordered_map <string,Tmp> svalues;
-    void adds(string N,string T,Tmp val);
+    void adds(string N,string T);
 };*/
 /*////////////////////////////////////////////
 //////////////////    END      ///////////////
