@@ -211,11 +211,22 @@ unary_op_ast::unary_op_ast(ExpAst *E)
 funcall_ast::funcall_ast(ExpAst *explist,identifier_ast *S):expslist(explist),funname(S){} 
 void funcall_ast::print()
 {
+	if(_type != _ftype)
+	{
+		cout<<"TO_"<<_ftype<<"(";
+		cout<<"Fun_Call \"";
+		funname->print();
+		cout<<"\" ";
+		expslist->print();
+		cout<<")";
+	}
+	else
+	{
 	cout<<"Fun_Call \"";
 	funname->print();
 	cout<<"\" ";
 	expslist->print();
-	
+	}
 	
 	
 }
@@ -223,11 +234,21 @@ void funcall_ast::print()
 
 floatconst::floatconst(float val)
 {
+
 	num = val;
 }
 void floatconst::print()
 {
-	cout<<"FloatConst "<<num;
+	if(_type != _ftype)
+	{
+		cout<<"TO_"<<_ftype<<"(";
+		cout<<"FloatConst "<<num;
+		cout<<")";
+	}
+	else
+	{
+		cout<<"FloatConst "<<num;
+	}
 }
 
 intconst::intconst(int val)
@@ -236,7 +257,16 @@ intconst::intconst(int val)
 }
 void intconst::print()
 {
-	cout<<"IntConst "<<num;
+	if(_type != _ftype)
+	{
+		cout<<"TO_"<<_ftype<<"(";
+		cout<<"IntConst "<<num;
+		cout<<")";
+	}
+	else
+	{
+		cout<<"IntConst "<<num;
+	}
 }
 
 stringconst::stringconst(string S)
@@ -254,6 +284,13 @@ identifier_ast::identifier_ast(string I)
 }
 void identifier_ast::print()
 {
+	if(_type!=_ftype)
+	{
+		cout<<"TO_"<<_ftype<<"(";
+		cout << "Id \""<<id<<"\"";
+		cout<<")";
+	}
+	else
 	cout << "Id \""<<id<<"\"";
 }
 //arrayref
@@ -454,14 +491,11 @@ void method::print()
 	cout<<"\n";
 }
 program::program(list<method *> *funlist):funs(funlist) {}
-/*
-template <typename Tmp>
-void symbol_t::adds(string N,string T,Tmp val)
+
+/*void symbol_t::adds(string N,string T)
 {
-	svalues.insert(pair(N,val)); 
 	stypes.insert(pair(N,T));
 }
 symbol_t global;
-unordered_map <string,symbol_t *> f_ptr;
-
+unordered_map <string,symbol_t * > f_ptr;
 */
