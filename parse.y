@@ -660,6 +660,7 @@ postfix_expression
         | IDENTIFIER '(' ')'
 	{
 		$$ = new funcall_ast(new exps(NULL),new identifier_ast($1));
+		$$->_print();
 		unordered_map<string,_Function *>::const_iterator got = Functions.find ($1);
 		if ( got == Functions.end() )
 			{
@@ -668,10 +669,11 @@ postfix_expression
 			}
  		 else
     		{	
-			
+			cout<<"here -> "<<(got->second)->type<<endl;
 			$$->_type=(got->second)->type;
 			$$->_ftype=(got->second)->type;
 		}
+		//$$->print();
 	}
 	| IDENTIFIER '(' expression_list ')' 
 	{
