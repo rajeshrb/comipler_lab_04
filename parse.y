@@ -32,7 +32,7 @@ translation_unit
 		}
 		cout <<"*************\n";
 		//_curr->print();	
-		//if(!err)$1->print();
+		if(!err)$1->print();
 		enable =1;
 	} 
 	| translation_unit function_definition 
@@ -41,9 +41,10 @@ translation_unit
 		for(it=Functions.begin(); it!=Functions.end(); it++)
 		{
 			it->second->print();
-		}		
+		}
+		cout <<"*************\n";		
 		//_curr->print();		
-		//if(!err)$2->print();		
+		if(!err)$2->print();		
 		enable =1;
 	} 
         ;
@@ -57,7 +58,8 @@ function_definition
 		}
 		else
 		{
-			$$=NULL;
+			$$=new method($2,$3);
+			//$$=NULL;
 			cout<<no_lines<<" : error : "<<$2->id<<" Has been Declared previously . \n";
 		}
 	} 
@@ -87,9 +89,6 @@ type_specifier
 fun_declarator
 	: IDENTIFIER '(' parameter_list ')' 
 	{
-		//$$ = $3;
-		//_curr = $$;
-		//cout<<"fun ";	
 		_curr->change_fname($1);	
 		$$ = new identifier_ast($1);
 	}
@@ -107,31 +106,22 @@ parameter_list
 	{
 		
 		_curr=new _Function(type_s,"default");		
-		_curr->add_parameter($1);
+		if(!(_curr->add_parameter($1))) cout<<no_lines<<": error : redeclaration of parameters . \n";
 	}
 	| parameter_list ',' parameter_declaration 
 	{
 		
-		_curr->add_parameter($3);
+		if(!(_curr->add_parameter($3))) cout<<no_lines<<": error : redeclaration of parameters . \n";
 	}
 	;
 
 parameter_declaration
 	: type_specifier declarator 
 	{
-		string s="";
-		//cout<<_dima<<endl;
-		for(int i=0;i<_dima;i++)
-		{
-			s+="(array ";
-		}
-		s=s+$1;
-		for(int i=0;i<_dima;i++)
-		{
-			s+=") ";
-		}
-		$$=new _Identifier($2,s);
+		$$=new _Identifier($2,$1,_dima);
 		_dima=0;
+		if($1=="void"){cout<<no_lines<<": error : parameter type can't be void . \n";err=1;}
+		
 	}
         ;
 
@@ -144,6 +134,7 @@ declarator
 		if($3->_type == "float")
 			{
 			cout<<no_lines<<": error : The Array Index of \'"<<$1<<"' "<<"can\'t be of any type other than int .\n";
+			err=1;
 			}
 		else
 			{
@@ -660,7 +651,7 @@ postfix_expression
         | IDENTIFIER '(' ')'
 	{
 		$$ = new funcall_ast(new exps(NULL),new identifier_ast($1));
-		$$->_print();
+		
 		unordered_map<string,_Function *>::const_iterator got = Functions.find ($1);
 		if ( got == Functions.end() )
 			{
@@ -669,7 +660,7 @@ postfix_expression
 			}
  		 else
     		{	
-			cout<<"here -> "<<(got->second)->type<<endl;
+			
 			$$->_type=(got->second)->type;
 			$$->_ftype=(got->second)->type;
 		}
@@ -767,25 +758,45 @@ l_expression
         : IDENTIFIER
 	{
 		$$ = new identifier_ast($1);
-		unordered_map<string,_Identifier*>::const_iterator got=(_curr->parameters).find($1);
-		if ( (got ==(_curr->parameters).end()))
+		unordered_map<string,_Identifier*>::const_iterator got1=(_curr->parameters).find($1);
+		unordered_map<string,_Identifier*>::const_iterator got2=(_curr->declarations).find($1);
+		if ( (got1 ==(_curr->parameters).end()))
 		{
-    			cout <<no_lines<<" : error : Variable "<<$1<<" not declared In this scope . \n";
-			err=1;
+			if(got2 == (_curr->declarations).end())
+			{
+    				cout <<no_lines<<" : error : Variable "<<$1<<" not declared In this scope . \n";
+				err=1;
+			}
+			else
+			{
+				_vtype=got2->second->type;
+				int s=got2->second->dimension;
+				for(int i=0; i<s; i++) _vtype+="*";
+			}
 		}
  		 else
     		{	
 			//$$ = new identifier_ast($1);
 			//cout<<"1 :"<<(got->second)->type<<endl;
-			$$->_type=(got->second)->type;
-			$$->_ftype=(got->second)->type;
+			_vtype=got1->second->type;
+				int s=got1->second->dimension;
+				for(int i=0; i<s; i++) _vtype+="*";
+
 		}
+		$$->_type=_vtype;
+		$$->_ftype=_vtype;
 		
 	}
         | l_expression '[' expression ']' 
 	{
+		//_dima++;
 		$$ = new index_ast($1,$3);
-	}	
+		int k=_vtype.size()-1;
+		if(k>=0 && _vtype[k]=='*') _vtype=_vtype.substr(0,k);
+		$$->_type=_vtype;
+		$$->_ftype=_vtype;
+	}
+		
         ;
 expression_list
         : expression
@@ -839,36 +850,34 @@ declaration
 declarator_list
 	: declarator
 	{
-		string s="";
-		//cout<<_dima<<endl;
-		for(int i=0;i<_dima;i++)
+		if(_vtype=="void") 
 		{
-			s+="(array ";
+			cout<<no_lines<<": error : data type of variable "<<$1<<" can't be void .\n";
 		}
-		s=s+_vtype;
-		for(int i=0;i<_dima;i++)
+		else
 		{
-			s+=") ";
+			if(_curr->add_declaration(new _Identifier($1,_vtype,_dima)));
+			else 
+			{
+				err=1;cout<<no_lines<<": error : redeclaration of variable "<<$1<<" in the scope of "<<_curr->token_name<<" . \n";
+			}
 		}
-		if(_curr->add_parameter(new _Identifier($1,s)));
-		else {err=1;cout<<no_lines<<": error : redeclaration of variable "<<$1<<" in the scope of "<<_curr->token_name<<" . \n";}
 		_dima=0;
 	}
 	| declarator_list ',' declarator
 	{
-		string s="";
-		//cout<<_dima<<endl;
-		for(int i=0;i<_dima;i++)
+		if(_vtype=="void") 
 		{
-			s+="(array ";
+			cout<<no_lines<<": error : data type of variable "<<$3<<" can't be void .\n";
 		}
-		s=s+_vtype;
-		for(int i=0;i<_dima;i++)
+		else
 		{
-			s+=") ";
+			if(_curr->add_declaration(new _Identifier($3,_vtype,_dima)));
+			else 
+			{
+				err=1;cout<<no_lines<<": error : redeclaration of variable "<<$3<<" in the scope of "<<_curr->token_name<<" . \n";
+			}
 		}
-		if(_curr->add_parameter(new _Identifier($3,s)));
-		else {err=1;cout<<no_lines<<": error : redeclaration of variable "<<$3<<" in the scope of "<<_curr->token_name<<" . \n";}
 		_dima=0;
 	}
 	;

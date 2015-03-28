@@ -193,6 +193,7 @@ void for_ast::print()
 void exps::print()
 {
 	list<ExpAst *>::iterator it;
+	//if(Elist == NULL) return;
 	for(it = Elist.begin();it != Elist.end();it++)
 	{
 		cout<<"(";
@@ -207,7 +208,7 @@ void exps::addE(ExpAst *E)
 
 exps::exps(ExpAst *E)
 {
-	Elist.push_back(E);
+	if(E!=NULL)Elist.push_back(E);
 }
 
 op_ast::op_ast(ExpAst *L,ExpAst *R)
@@ -225,9 +226,9 @@ funcall_ast::funcall_ast(ExpAst *explist,identifier_ast *S):expslist(explist),fu
 void funcall_ast::print()
 {
 	
-	cout<<"Fun_Call \"";
+	cout<<"Fun_Call (";
 	funname->print();
-	cout<<"\" ";
+	cout<<") ";
 	expslist->print();
 }
 //end
@@ -473,11 +474,20 @@ program::program(list<method *> *funlist):funs(funlist) {}
 
 /********** symbol table ***************/
 
-_Identifier::_Identifier(string var_name,string var_type):type(var_type),token_name(var_name){}
+_Identifier::_Identifier(string var_name,string var_type,int d):type(var_type),token_name(var_name),dimension(d){}
 
 void _Identifier::print()
 {
-	cout<<type<<" "<<token_name<<endl;
+	for(int i=0;i<dimension;i++)
+	{
+		cout<<"(array ";
+	}
+	cout<<type;
+	for(int i=0;i<dimension;i++)
+	{
+		cout<<")";
+	}
+	cout<<" "<<token_name<<endl;
 }
 
 _Function::_Function(string func_type,string func_name):type(func_type), token_name(func_name){}
@@ -492,20 +502,35 @@ bool _Function::add_parameter(_Identifier* var)
 	return parameters.insert(make_pair(var->token_name,var)).second;	
 }
 
-/*bool _Function::add_declaration(_Identifier* var)
+bool _Function::add_declaration(_Identifier* var)
 {
 	return declarations.insert(make_pair(var->token_name,var)).second;
-}*/
+}
 
 void _Function::print()
 {
 	unordered_map<string,_Identifier*>::iterator it;
-	cout<<"Function variables\n";
-	for(it=parameters.begin(); it!=parameters.end(); it++)
+	cout<<"Function parameters\n";
+	it=parameters.begin();
+	if(it==parameters.end()) cout<<"(empty)\n";
+	else
 	{
-		it->second->print();
+		for(; it!=parameters.end(); it++)
+		{
+			it->second->print();
+		}
 	}
-
+	
+	cout<<"Function variables\n";
+	it=declarations.begin();
+	if(it==declarations.end()) cout<<"(empty)\n";
+	else 
+	{
+		for(; it!=declarations.end(); it++)
+		{
+			it->second->print();
+		}
+	}
 }
 
 /*

@@ -361,7 +361,8 @@ class _Identifier               /* variable */
     public:
         string type;        
         string token_name;
-        _Identifier(string,string);
+        int dimension;
+        _Identifier(string,string,int);
         void print();
 };
 
@@ -372,11 +373,11 @@ class _Function                 /* a function details */
     public:
         string token_name; 
         string type; 
-        //unordered_map<string,_Identifier*> declarations;        /* all local veriables */
+        unordered_map<string,_Identifier*> declarations;        /* all local veriables */
         unordered_map<string,_Identifier*> parameters;            /* parameters and thier types */
         _Function(string,string);                           
         bool add_parameter(_Identifier*);
-        //bool add_declaration(_Identifier*);
+        bool add_declaration(_Identifier*);
         void change_fname(string);
         void print();
 };
