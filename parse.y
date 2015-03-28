@@ -25,13 +25,24 @@ method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : b
 translation_unit
 	: function_definition
 	{
-		_curr->print();	
+		unordered_map<string,_Function*>::iterator it;
+		for(it=Functions.begin(); it!=Functions.end(); it++)
+		{
+			it->second->print();
+		}
+		cout <<"*************\n";
+		//_curr->print();	
 		//if(!err)$1->print();
 		enable =1;
 	} 
 	| translation_unit function_definition 
 	{
-		_curr->print();		
+		unordered_map<string,_Function*>::iterator it;
+		for(it=Functions.begin(); it!=Functions.end(); it++)
+		{
+			it->second->print();
+		}		
+		//_curr->print();		
 		//if(!err)$2->print();		
 		enable =1;
 	} 
