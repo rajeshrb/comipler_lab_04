@@ -33,6 +33,22 @@ Function : Id "main"
         (Assign_Exp(Id "x")(TO_int(DEVIDE_float (PLUS_float (TO_float(MINUS_int (MULT_int (Id "a") (Id "b")) (IntConst 3))) (Id "y")) (TO_float(IntConst 2)))))
         (Assign_Exp(Id "y")(MULT_float (TO_float(PLUS_int (IntConst 3) (Id "x"))) (FloatConst 2.8)))
         (Assign_Exp(Id "c")(Fun_Call (Id "f") (IntConst 4) (IntConst 5) ))
+        (If((EQ_OP_int (Id "a") (Id "b")) 
+            (BLOCK [
+                    (Assign_Exp(Id "a")(PLUS_int (Id "a") (Id "b")))
+                    ])
+            (BLOCK [
+                    (Assign_Exp(Id "b")(PLUS_int (Id "b") (Id "a")))
+                    ])
+
+            ))
+        (For((Assign_Exp(Id "b")(IntConst 0))
+              (LT_int (Id "b") (Id "c"))
+              (PP (Id "b"))
+              (BLOCK [
+                      (Assign_Exp(Id "c")(PLUS_int (Id "c") (Id "b")))
+                      ])
+))
         (Return_Exp(IntConst 0))
         ])
 
