@@ -2,8 +2,13 @@ Function : Id "f"
 (BLOCK [
         (Assign_Exp(Id "a")(IntConst 4))
         (Assign_Exp(Id "b")(IntConst 5))
-        (Assign_Exp(Index (Id "c") (IntConst 4))(Id "b"))
+        (Assign_Exp(Index (Index (Id "c") (IntConst 4)) (IntConst 2))(Id "b"))
         (Return_Exp(PLUS (Id "a") (Id "b")))
         ])
 
-16 : error : number of arguments mismatch .
+Function : Id "main"
+(BLOCK [
+        (Assign_Exp(Id "z")(TO_float(Fun_Call (Id "f") (Index (Index (Id "a") (IntConst 4)) (IntConst 2)) (TO_float(Id "y")) )))
+        (Return_Exp(IntConst 0))
+        ])
+

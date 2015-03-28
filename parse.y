@@ -104,14 +104,17 @@ fun_declarator
 parameter_list
 	: parameter_declaration 
 	{
-		
+		_posp=1;
 		_curr=new _Function(type_s,"default");		
 		if(!(_curr->add_parameter($1))) cout<<no_lines<<": error : redeclaration of parameters . \n";
+		else _curr->parameters_pos.insert(make_pair(_posp,$1->type));
+
 	}
 	| parameter_list ',' parameter_declaration 
 	{
-		
+		_posp++;		
 		if(!(_curr->add_parameter($3))) cout<<no_lines<<": error : redeclaration of parameters . \n";
+		else _curr->parameters_pos.insert(make_pair(_posp,$3->type));
 	}
 	;
 
@@ -684,18 +687,18 @@ postfix_expression
 			if(larg.size()==got->second->parameters.size())    			
 			{
 				list<ExpAst*>::iterator it=larg.begin();
-				unordered_map<string,_Identifier*>::iterator iter=got->second->parameters.begin();
+				map<int,string>::iterator iter=got->second->parameters_pos.begin();
 				
 				bool compat=1;
-				for(;it!=  larg.end() && iter!=got->second->parameters.end(); it++,iter++)
+				for(;it!=  larg.end() && iter!=got->second->parameters_pos.end(); it++,iter++)
 				{
 					bool found=0;
-					string lstr=(*it)->_ftype, rstr=iter->second->type;					
+					string lstr=(*it)->_ftype, rstr=iter->second;					
 					if(lstr==rstr) found=1;
 					else
 					{
-						if(lstr=="int" && rstr=="float") found=1;
-						else if(lstr=="float" && rstr=="int") found=1;
+						if(lstr=="int" && rstr=="float") {(*it)->_ftype = "float";found=1;}
+						else if(lstr=="float" && rstr=="int") {(*it)->_ftype = "int";found=1;}
 					}
 					compat=compat && found;
 					if(!compat) break;

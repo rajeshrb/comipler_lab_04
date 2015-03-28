@@ -1,18 +1,17 @@
-int f()
+int f(int x,float y)
 {
-	int a,b,c[5];
+	int a,b,c[5][4];
 	a=4;
 	b=5;
-	c[4]=b;
+        c[4][2]=b;
 	return a+b;
-} 
-
-int main(int x,float y)
-{
-	int a,b,c;
-	b=a+4.3;
-	x=((a*b-3)+y)/2;
-	y=(3+x)*2.8;
-	c=f(4,5);
-	return 0;
 }
+
+int main(int a[4][5],float b)
+{
+int x,y;
+float z;
+z=f(a[4][2],y);
+return 0;
+}
+ 

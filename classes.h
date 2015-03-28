@@ -375,6 +375,7 @@ class _Function                 /* a function details */
         string type; 
         unordered_map<string,_Identifier*> declarations;        /* all local veriables */
         unordered_map<string,_Identifier*> parameters;            /* parameters and thier types */
+        map<int,string> parameters_pos;
         _Function(string,string);                           
         bool add_parameter(_Identifier*);
         bool add_declaration(_Identifier*);
