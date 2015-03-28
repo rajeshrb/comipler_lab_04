@@ -1,17 +1,18 @@
 int f()
 {
-int a,b,c[5];
-a=4;
-b=5;
-c[4]=b;
-return a+b;
+	int a,b,c[5];
+	a=4;
+	b=5;
+	c[4]=b;
+	return a+b;
 } 
+
 int main(int x,float y)
 {
-int a,b,c;
-b=a+4.3;
-x=((a*b-3)+y)/2;
-y=(3+x)*2.8;
-c=f(4,5);
-return 0;
+	int a,b,c;
+	b=a+4.3;
+	x=((a*b-3)+y)/2;
+	y=(3+x)*2.8;
+	c=f(4,5);
+	return 0;
 }

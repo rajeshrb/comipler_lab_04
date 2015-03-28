@@ -25,24 +25,24 @@ method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : b
 translation_unit
 	: function_definition
 	{
-		unordered_map<string,_Function*>::iterator it;
+		/*unordered_map<string,_Function*>::iterator it;
 		for(it=Functions.begin(); it!=Functions.end(); it++)
 		{
 			it->second->print();
 		}
-		cout <<"*************\n";
+		cout <<"*************\n";*/
 		//_curr->print();	
 		if(!err)$1->print();
 		enable =1;
 	} 
 	| translation_unit function_definition 
 	{
-		unordered_map<string,_Function*>::iterator it;
+		/*unordered_map<string,_Function*>::iterator it;
 		for(it=Functions.begin(); it!=Functions.end(); it++)
 		{
 			it->second->print();
 		}
-		cout <<"*************\n";		
+		cout <<"*************\n";*/		
 		//_curr->print();		
 		if(!err)$2->print();		
 		enable =1;
@@ -660,9 +660,15 @@ postfix_expression
 			}
  		 else
     		{	
-			
-			$$->_type=(got->second)->type;
-			$$->_ftype=(got->second)->type;
+			if(got->second->parameters.empty())
+			{	
+				$$->_type=(got->second)->type;
+				$$->_ftype=(got->second)->type;
+			}
+			else
+			{
+				cout<<no_lines<<" : error : "<<$1<<" expects zero arguments.\n";
+			}
 		}
 		//$$->print();
 	}
@@ -670,18 +676,49 @@ postfix_expression
 	{
 		//cout<< " hi";
 		$$ = new funcall_ast($3,new identifier_ast($1));
+		
+		list<ExpAst*> larg=$3->Elist;
 		unordered_map<string,_Function *>::const_iterator got = Functions.find ($1);
-		if ( got == Functions.end() )
-    			{
-    				cout <<no_lines<<" : error : Function "<<$1<<" not declared in the scope . \n";
+		if (got != Functions.end() )
+		{
+			if(larg.size()==got->second->parameters.size())    			
+			{
+				list<ExpAst*>::iterator it=larg.begin();
+				unordered_map<string,_Identifier*>::iterator iter=got->second->parameters.begin();
+				
+				bool compat=1;
+				for(;it!=  larg.end() && iter!=got->second->parameters.end(); it++,iter++)
+				{
+					bool found=0;
+					string lstr=(*it)->_ftype, rstr=iter->second->type;					
+					if(lstr==rstr) found=1;
+					else
+					{
+						if(lstr=="int" && rstr=="float") found=1;
+						else if(lstr=="float" && rstr=="int") found=1;
+					}
+					compat=compat && found;
+					if(!compat) break;
+				}		  				
+				if(!compat)
+				{
+					cout <<no_lines<<" : error : Function "<<$1<<" argument type mismatch . \n";
+					err=1;
+				}
+			}
+			else
+			{
+				cout<<no_lines<<" : error : number of arguments mismatch .\n";
 				err=1;
 			}
- 		 else
-    		{	
-			
-			$$->_type=(got->second)->type;
-			$$->_ftype=(got->second)->type;
 		}
+ 		else
+    		{
+			cout<<no_lines<<" : error : the fundtion "<<$1<<" is not defined.\n"<<endl;
+			err=1;
+		}
+		$$->_type=(got->second)->type;
+		$$->_ftype=(got->second)->type;
 	}
 	| l_expression INC_OP
 	{
