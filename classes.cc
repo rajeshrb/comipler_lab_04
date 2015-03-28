@@ -213,7 +213,7 @@ exps::exps(ExpAst *E)
 op_ast::op_ast(ExpAst *L,ExpAst *R)
 {
 	left = L;
-	right= R;
+	right = R;
 }
 
 unary_op_ast::unary_op_ast(ExpAst *E)

@@ -1,9 +1,2 @@
-6 : error : type mismatch . subtraction between  and int. 
-6 : error : expected right operand type is float but given is .
-Function variables
-float g
-int f
-(array int)  c
-int e
-(array int)  b
-int a
+Id "a"PLUS (Id "a") (IntConst 4)4 : error : type mismatch . addition between  and int. 
+4 : error : expected right operand type is int but given is .

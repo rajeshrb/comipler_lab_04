@@ -1,9 +1,6 @@
-int main(int a,int b[4],int c[6])
+int main()
 {
-int e,f;
-float g;
-e=g;
-g=e*4;
-e=34.6;
+int a,b;
+b=a+4;
 return 0;
 }

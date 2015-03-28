@@ -25,13 +25,13 @@ method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : b
 translation_unit
 	: function_definition
 	{
-		_curr->print();	
+		//_curr->print();	
 		if(!err)$1->print();
 		enable =1;
 	} 
 	| translation_unit function_definition 
 	{
-		_curr->print();		
+		//_curr->print();		
 		if(!err)$2->print();		
 		enable =1;
 	} 
@@ -451,13 +451,17 @@ additive_expression
 		$$ = $1;
 	}
 	| additive_expression '+' multiplicative_expression 
-	{
+	{	
+		$1->print();
 		$$ = new plus_ast($1,$3);
+		$1->print();
 		if($1->_ftype == $3->_ftype)
 		{		
 			
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+			$1->print();
+			$3->print();
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
@@ -701,6 +705,7 @@ l_expression
  		 else
     		{	
 			//$$ = new identifier_ast($1);
+			//cout<<"1 :"<<(got->second)->type<<endl;
 			$$->_type=(got->second)->type;
 			$$->_ftype=(got->second)->type;
 		}

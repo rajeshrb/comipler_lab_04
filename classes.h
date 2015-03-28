@@ -145,7 +145,7 @@ class op_ast : public ExpAst
 public:
         ExpAst *left;
         ExpAst *right;
-        op_ast(ExpAst *L,ExpAst *R);
+        op_ast(ExpAst *,ExpAst *);
 };
 
 class unary_op_ast : public ExpAst
