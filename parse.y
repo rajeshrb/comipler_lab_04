@@ -25,14 +25,14 @@ method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : b
 translation_unit
 	: function_definition
 	{
-		//_curr->print();	
-		if(!err)$1->print();
+		_curr->print();	
+		//if(!err)$1->print();
 		enable =1;
 	} 
 	| translation_unit function_definition 
 	{
-		//_curr->print();		
-		if(!err)$2->print();		
+		_curr->print();		
+		//if(!err)$2->print();		
 		enable =1;
 	} 
         ;
@@ -211,7 +211,9 @@ assignment_statement
 	} 								
 	|  l_expression '=' expression ';'
 	{
+		
 		$$ = new ass_ast($1,$3);
+		
 		if($1->_ftype == $3->_ftype);
 		
 		else
@@ -220,7 +222,7 @@ assignment_statement
 			{
 				$3->_ftype="int";
 				$1->num = (int)($3->num);
-				$$ = new ass_ast($1,$3);
+				//$$ = new ass_ast($1,$3);
 			}
 			else 
 			{
@@ -228,7 +230,7 @@ assignment_statement
 				{
 					$3->_ftype="float";
 					$1->num = (float)($3->num);
-					$$ = new ass_ast($1,$3);
+					//$$ = new ass_ast($1,$3);
 				}
 				else {
 					cout<<no_lines<<" : error : expected right operand type is "<<$1->_type<<" but given is "<<$3->_type<<".\n";
@@ -273,11 +275,12 @@ equality_expression
 	} 
         | equality_expression EQ_OP relational_expression 
 	{
-		$$ = new eq_op_ast($1,$3);
+		
 		if($1->_ftype == $3->_ftype)
-		{		
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+		{	
+			$$ = new eq_op_ast($1,$3);	
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
@@ -295,16 +298,17 @@ equality_expression
 					$$->_type="int";
 					$$->_ftype="int";
 				}
-				else {cout<<no_lines<<" : error : type mismatch . comparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;}
+				else {cout<<no_lines<<" : error : type mismatch . comparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";
+					$$ = new eq_op_ast($1,$3);err=1;}
 		}
 	}	
 	| equality_expression NE_OP relational_expression
 	{
-		$$ = new ne_op_ast($1,$3);
+		
 		if($1->_ftype == $3->_ftype)
-		{		
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+		{	$$ = new ne_op_ast($1,$3);	
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
@@ -322,7 +326,11 @@ equality_expression
 					$$->_type="int";
 					$$->_ftype="int";
 				}
-				else {cout<<no_lines<<" : error : type mismatch . comparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;}
+				else 
+					{
+					cout<<no_lines<<" : error : type mismatch . comparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;
+					$$ = new ne_op_ast($1,$3);
+					}
 		}
 	}
 	;
@@ -333,12 +341,12 @@ relational_expression
 	} 
         | relational_expression '<' additive_expression 
 	{
-		$$ = new lt_ast($1,$3);
+		
 		if(($1->_ftype == $3->_ftype) && ($1->_ftype == "int" || $1->_ftype=="float"))
 		{		
-			
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+			$$ = new lt_ast($1,$3);
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
@@ -356,17 +364,21 @@ relational_expression
 					$$->_type="int";
 					$$->_ftype="int";
 				}
-				else {cout<<no_lines<<" : error : type mismatch . coparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;}
+				else 
+				{
+					cout<<no_lines<<" : error : type mismatch . coparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;
+					$$ = new lt_ast($1,$3);
+				}
 		}
 	}
 	| relational_expression '>' additive_expression 
 	{
-		$$ = new gt_ast($1,$3);
+		
 		if(($1->_ftype == $3->_ftype) && ($1->_ftype == "int" || $1->_ftype=="float"))
 		{		
-			
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+			$$ = new gt_ast($1,$3);
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
@@ -384,17 +396,21 @@ relational_expression
 					$$->_type="int";
 					$$->_ftype="int";
 				}
-				else {cout<<no_lines<<" : error : type mismatch . comparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;}
+				else 
+				{
+					cout<<no_lines<<" : error : type mismatch . comparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;
+					$$ = new gt_ast($1,$3);
+				}
 		}
 	}
 	| relational_expression LE_OP additive_expression 
 	{
-		$$ = new le_op_ast($1,$3);
+		
 		if(($1->_ftype == $3->_ftype) && ($1->_ftype == "int" || $1->_ftype=="float"))
 		{		
-			
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+			$$ = new le_op_ast($1,$3);
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
@@ -412,17 +428,22 @@ relational_expression
 					$$->_type="int";
 					$$->_ftype="int";
 				}
-				else {cout<<no_lines<<" : error : type mismatch . comparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;}
+				else 
+				{
+					cout<<no_lines<<" : error : type mismatch . comparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";
+					err=1;
+					$$ = new le_op_ast($1,$3);
+				}
 		}
 	}
         | relational_expression GE_OP additive_expression 
 	{
-		$$ = new ge_op_ast($1,$3);
+		
 		if(($1->_ftype == $3->_ftype) && ($1->_ftype == "int" || $1->_ftype=="float"))
 		{		
-			
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+			$$ = new ge_op_ast($1,$3);
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
@@ -440,7 +461,12 @@ relational_expression
 					$$->_type="int";
 					$$->_ftype="int";
 				}
-				else {cout<<no_lines<<" : error : type mismatch . comparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;}
+				else 
+				{
+					cout<<no_lines<<" : error : type mismatch . comparison between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";
+					err=1;
+					$$ = new ge_op_ast($1,$3);
+				}
 		}
 	}
 	;
@@ -452,14 +478,11 @@ additive_expression
 	}
 	| additive_expression '+' multiplicative_expression 
 	{	
-		$1->print();
-		$$ = new plus_ast($1,$3);
-		$1->print();
+		
 		if($1->_ftype == $3->_ftype)
 		{		
 			
-			$1->print();
-			$3->print();
+			$$=new plus_ast($1,$3);
 			$$->_type=$3->_ftype;
 			$$->_ftype=$3->_ftype;
 		}
@@ -468,43 +491,57 @@ additive_expression
 			if($1->_ftype == "int" && $3->_ftype == "float")
 			{
 				$1->_ftype="float";
+				$$=new plus_ast($1,$3);
 				$$->_type="float";
 				$$->_ftype="float";
 			}
 			else if($3->_ftype == "int" && $1->_ftype == "float")
 				{
 					$3->_ftype = "float";
+					$$=new plus_ast($1,$3);
 					$$->_type="float";
 					$$->_ftype="float";
 				}
-				else {cout<<no_lines<<" : error : type mismatch . addition between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;}
+				else 
+				{
+					cout<<no_lines<<" : error : type mismatch . addition between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";
+					$$=new plus_ast($1,$3);
+					err=1;
+				}
 		}	
 				
 	}
 	| additive_expression '-' multiplicative_expression 
 	{
-		$$ = new minus_ast($1,$3);
+		
 		if(($1->_ftype == $3->_ftype) && ($1->_ftype == "int" || $1->_ftype=="float"))
 		{		
-			
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+			$$ = new minus_ast($1,$3);
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
 			if($1->_ftype == "int" && $3->_ftype == "float")
 			{
 				$1->_ftype="float";
+				$$ = new minus_ast($1,$3);
 				$$->_type="float";
 				$$->_ftype="float";
 			}
 			else if($3->_ftype == "int" && $1->_ftype == "float")
 				{
 					$3->_ftype = "float";
+					$$ = new minus_ast($1,$3);
 					$$->_type="float";
 					$$->_ftype="float";
 				}
-				else {cout<<no_lines<<" : error : type mismatch . subtraction between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;}
+				else 
+				{
+					cout<<no_lines<<" : error : type mismatch . subtraction between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";
+					err=1;
+					$$ = new minus_ast($1,$3);
+				}
 		}
 	}
 	;
@@ -516,54 +553,68 @@ multiplicative_expression
 	}
 	| multiplicative_expression '*' unary_expression 
 	{
-		$$ = new mult_ast($1,$3);
+		
 		if(($1->_ftype == $3->_ftype) && ($1->_ftype == "int" || $1->_ftype=="float"))
 		{		
-			
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+			$$ = new mult_ast($1,$3);
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
 			if($1->_ftype == "int" && $3->_ftype == "float")
 			{
 				$1->_ftype="float";
+				$$ = new mult_ast($1,$3);
 				$$->_type="float";
 				$$->_ftype="float";
 			}
 			else if($3->_ftype == "int" && $1->_ftype == "float")
 				{
 					$3->_ftype = "float";
+					$$ = new mult_ast($1,$3);
 					$$->_type="float";
 					$$->_ftype="float";
 				}
-				else {cout<<no_lines<<" : error : type mismatch . multiplication between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;}
+				else 
+				{
+					cout<<no_lines<<" : error : type mismatch . multiplication between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";
+					err=1;
+					$$ = new mult_ast($1,$3);
+				}
 		}
 	}
 	| multiplicative_expression '/' unary_expression 
 	{
-		$$ = new devide_ast($1,$3);
+		
 		if(($1->_ftype == $3->_ftype) && ($1->_ftype == "int" || $1->_ftype=="float"))
 		{		
-			
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+			$$ = new devide_ast($1,$3);
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
 			if($1->_ftype == "int" && $3->_ftype == "float")
 			{
 				$1->_ftype="float";
+				$$ = new devide_ast($1,$3);
 				$$->_type="float";
 				$$->_ftype="float";
 			}
 			else if($3->_ftype == "int" && $1->_ftype == "float")
 				{
 					$3->_ftype = "float";
+					$$ = new devide_ast($1,$3);
 					$$->_type="float";
 					$$->_ftype="float";
 				}
-				else {cout<<no_lines<<" : error : type mismatch . subtraction between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";err=1;}
+				else 
+				{
+					cout<<no_lines<<" : error : type mismatch . subtraction between "<<$1->_ftype<<" and "<<$3->_ftype<<". \n";
+					err=1;
+					$$ = new devide_ast($1,$3);
+				}
 		}
 		
 	}
@@ -643,11 +694,12 @@ primary_expression
 	}
         | l_expression '=' expression 				// added this production
 	{
-		$$ = new assign_ast($1,$3);
+		
 		if($1->_ftype == $3->_ftype)
 		{ 
-			$$->_type=$1->_ftype;
-			$$->_ftype=$1->_ftype;
+			$$ = new assign_ast($1,$3);
+			$$->_type=$3->_ftype;
+			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
@@ -655,6 +707,7 @@ primary_expression
 			{
 				$3->_ftype="int";
 				$1->num = (int)($3->num);
+				$$ = new assign_ast($1,$3);
 			}
 			else 
 			{
@@ -662,9 +715,14 @@ primary_expression
 				{
 					$3->_ftype="float";
 					$1->num = (float)($3->num);
-					
+					$$ = new assign_ast($1,$3);
 				}
-				else {cout<<no_lines<<" : error : expected right operand type is "<<$1->_type<<" but given is "<<$3->_type<<".\n";err=1;}
+				else 
+				{
+					cout<<no_lines<<" : error : expected right operand type is "<<$1->_type<<" but given is "<<$3->_type<<".\n";
+					err=1;
+					$$ = new assign_ast($1,$3);
+				}
 			}
 		}
 	}

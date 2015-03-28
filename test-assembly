@@ -1,6 +1,16 @@
-int main()
+int f()
 {
 int a,b;
-b=a+4;
+a=4;
+b=5;
+return a+b;
+} 
+int main(int x,float y)
+{
+int a,b,c;
+b=a+4.3;
+x=((a*b-3)+y)/2;
+y=(3+x)*2.8;
+c=f();
 return 0;
 }

@@ -1,2 +1,0 @@
-Id "a"PLUS (Id "a") (IntConst 4)4 : error : type mismatch . addition between  and int. 
-4 : error : expected right operand type is int but given is .
