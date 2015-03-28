@@ -492,25 +492,20 @@ bool _Function::add_parameter(_Identifier* var)
 	return parameters.insert(make_pair(var->token_name,var)).second;	
 }
 
-bool _Function::add_declaration(_Identifier* var)
+/*bool _Function::add_declaration(_Identifier* var)
 {
 	return declarations.insert(make_pair(var->token_name,var)).second;
-}
+}*/
 
 void _Function::print()
 {
 	unordered_map<string,_Identifier*>::iterator it;
-	cout<<"Function parameters\n";
+	cout<<"Function variables\n";
 	for(it=parameters.begin(); it!=parameters.end(); it++)
 	{
 		it->second->print();
 	}
 
-	cout<<"Function local variables\n";
-	for(it=declarations.begin(); it!=declarations.end(); it++)
-	{
-		it->second->print();
-	}
 }
 
 /*

@@ -1,12 +1,9 @@
-2
-Function parameters
-(array (array int) )  a
-Function local variables
-(array (array (array int) ) )  d
-(array int)  z
-float y
-int x
-Function parameters
-Function local variables
-float m
-int k
+6 : error : type mismatch . subtraction between  and int. 
+6 : error : expected right operand type is float but given is .
+Function variables
+float g
+int f
+(array int)  c
+int e
+(array int)  b
+int a
