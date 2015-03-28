@@ -10,7 +10,7 @@ Function : Id "f"
         (Assign_Exp(Id "a")(IntConst 4))
         (Assign_Exp(Id "b")(IntConst 5))
         (Assign_Exp(Index (Id "c") (IntConst 4))(Id "b"))
-        (Return_Exp(PLUS (Id "a") (Id "b")))
+        (Return_Exp(PLUS_int (Id "a") (Id "b")))
         ])
 
 Function parameters
@@ -29,9 +29,9 @@ int a
 *************
 Function : Id "main"
 (BLOCK [
-        (Assign_Exp(Id "b")(TO_int(PLUS (TO_float(Id "a")) (FloatConst 4.3))))
-        (Assign_Exp(Id "x")(TO_int(DEVIDE (PLUS (TO_float(MINUS (MULT (Id "a") (Id "b")) (IntConst 3))) (Id "y")) (TO_float(IntConst 2)))))
-        (Assign_Exp(Id "y")(MULT (TO_float(PLUS (IntConst 3) (Id "x"))) (FloatConst 2.8)))
+        (Assign_Exp(Id "b")(TO_int(PLUS_float (TO_float(Id "a")) (FloatConst 4.3))))
+        (Assign_Exp(Id "x")(TO_int(DEVIDE_float (PLUS_float (TO_float(MINUS_int (MULT_int (Id "a") (Id "b")) (IntConst 3))) (Id "y")) (TO_float(IntConst 2)))))
+        (Assign_Exp(Id "y")(MULT_float (TO_float(PLUS_int (IntConst 3) (Id "x"))) (FloatConst 2.8)))
         (Assign_Exp(Id "c")(Fun_Call (Id "f") (IntConst 4) (IntConst 5) ))
         (Return_Exp(IntConst 0))
         ])
