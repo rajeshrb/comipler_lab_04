@@ -3,12 +3,12 @@ Function : Id "f"
         (Assign_Exp(Id "a")(IntConst 4))
         (Assign_Exp(Id "b")(IntConst 5))
         (Assign_Exp(Index (Index (Id "c") (IntConst 4)) (IntConst 2))(Id "b"))
-        (Return_Exp(PLUS (Id "a") (Id "b")))
+        (Return_Exp(PLUS_int (Id "a") (Id "b")))
         ])
 
-Function : Id "main"
+Function : Id "g"
 (BLOCK [
-        (Assign_Exp(Id "z")(TO_float(Fun_Call (Id "f") (Index (Index (Id "a") (IntConst 4)) (IntConst 2)) (TO_float(Id "y")) )))
-        (Return_Exp(IntConst 0))
+        (Return_Exp(TO_float(Id "i")))
         ])
 
+39 : error : Variable c not declared In this scope . 

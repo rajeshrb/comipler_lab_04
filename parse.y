@@ -200,11 +200,17 @@ statement
         | RETURN expression ';'	
 	{
 		$$ = new return_ast($2);
-		if($2->_type != type_s)
+		
+		if(($2->_ftype=="int" || $2->_ftype =="float") &&(type_s=="int" || type_s=="float"))
 		{
-			err=1;
-			cout <<no_lines<<": error : return type error. Expected "<<type_s<<" given "<<$2->_type<<" . \n";
+			$2->_ftype=type_s;
 		}
+		else
+		{
+		err=1;
+		cout <<no_lines<<": error : return type error. Expected "<<type_s<<" given "<<$2->_type<<" . \n";
+		}
+		
 		
 	} 
         ;

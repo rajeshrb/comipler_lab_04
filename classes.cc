@@ -315,7 +315,7 @@ void and_ast::print()
 eq_op_ast::eq_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void eq_op_ast::print() 
 {
-	cout << "EQ_OP (";
+	cout << "EQ_OP_"<<left->_ftype<<" (";
 	left->_print();
 	cout <<") (";
 	right->_print();
@@ -326,7 +326,7 @@ void eq_op_ast::print()
 ne_op_ast::ne_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void ne_op_ast::print() 
 {
-	cout << "NE_OP (";
+	cout << "NE_OP_"<<left->_ftype<<" (";
 	left->_print();
 	cout <<") (";
 	right->_print();
@@ -337,7 +337,8 @@ void ne_op_ast::print()
 lt_ast::lt_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void lt_ast::print() 
 {
-	cout << "LT (";
+
+	cout << "LT_"<<left->_ftype<<" (";
 	left->_print();
 	cout <<") (";
 	right->_print();
@@ -347,7 +348,7 @@ void lt_ast::print()
 gt_ast::gt_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void gt_ast::print() 
 {
-	cout << "GT (";
+	cout << "GT_"<<left->_ftype<<" (";
 	left->_print();
 	cout <<") (";
 	right->_print();
@@ -358,7 +359,7 @@ void gt_ast::print()
 le_op_ast::le_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void le_op_ast::print() 
 {
-	cout << "LE_OP (";
+	cout << "LE_OP_"<<left->_ftype<<" (";
 	left->_print();
 	cout <<") (";
 	right->_print();
@@ -369,7 +370,7 @@ void le_op_ast::print()
 ge_op_ast::ge_op_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void ge_op_ast::print() 
 {
-	cout << "GE_OP (";
+	cout << "GE_OP_"<<left->_ftype<<" (";
 	left->_print();
 	cout <<") (";
 	right->_print();
@@ -380,7 +381,7 @@ void ge_op_ast::print()
 plus_ast::plus_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void plus_ast::print() 
 {
-	cout << "PLUS (";
+	cout << "PLUS_"<<left->_ftype<<" (";
 	left->_print();
 	cout <<") (";
 	right->_print();
@@ -391,7 +392,7 @@ void plus_ast::print()
 minus_ast::minus_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void minus_ast::print() 
 {
-	cout << "MINUS (";
+	cout << "MINUS_"<<left->_ftype<<" (";
 	left->_print();
 	cout <<") (";
 	right->_print();
@@ -402,7 +403,7 @@ void minus_ast::print()
 mult_ast::mult_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void mult_ast::print() 
 {
-	cout << "MULT (";
+	cout << "MULT_"<<left->_ftype<<" (";
 	left->_print();
 	cout <<") (";
 	right->_print();
@@ -413,7 +414,7 @@ void mult_ast::print()
 devide_ast::devide_ast(ExpAst *L,ExpAst *R):op_ast(L,R){}
 void devide_ast::print() 
 {
-	cout << "DEVIDE (";
+	cout << "DEVIDE_"<<left->_ftype<<" (";
 	left->_print();
 	cout <<") (";
 	right->_print();

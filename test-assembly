@@ -7,11 +7,38 @@ int f(int x,float y)
 	return a+b;
 }
 
+float g(int i)
+{
+return i;
+}
+
 int main(int a[4][5],float b)
 {
-int x,y;
-float z;
-z=f(a[4][2],y);
-return 0;
+	int x,y,i,j;
+	float z;
+	x=z;
+	y=a[2][3]+b;
+	z=f(a[4][2],y);
+	if(x==b)
+	{
+	x=x+z;
+	}
+	else ;
+
+	for(i=0;i<3.5;i++)
+	{
+		for(j=0;j<5;j++)
+		{
+		a[i][j]=i*j;
+		}
+	}
+	z=g(6);
+	while(i>3)
+	{
+	b=a[3][j];
+	c=i++;
+	}
+	
+
+	return g(b);
 }
- 
