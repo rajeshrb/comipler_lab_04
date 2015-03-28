@@ -12,7 +12,7 @@ float g(int i)
 return i;
 }
 
-int main(int a[4][5],float b)
+int ain(int a[4][5],float b)
 {
 	int x,y,i,j;
 	float z;

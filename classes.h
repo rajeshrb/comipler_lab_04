@@ -348,9 +348,12 @@ public:
 class program
 {
 	protected:
-	list<method *> *funs;
+	list<method *> funs;
 	public:
-	program(list<method *> *funlist);
+	program(method *);
+    void addm(method *);
+    void print();
+
 };
 
 
@@ -362,7 +365,9 @@ class _Identifier               /* variable */
         string type;        
         string token_name;
         int dimension;
-        _Identifier(string,string,int);
+        int size;
+        int offset;
+        _Identifier(string,string,int,int,int);
         void print();
 };
 
@@ -385,6 +390,8 @@ class _Function                 /* a function details */
 
 
 extern unordered_map<string,_Function*> Functions;
+extern program* _prog;
+extern int err;
 
 //_Function * curr;
 /************ Error details ******************/

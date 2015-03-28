@@ -25,6 +25,7 @@ method* ; Char : char ; Id : identifier_ast * ; aref : ArrayRef_ast *; Block : b
 translation_unit
 	: function_definition
 	{
+		_prog=new program($1);		
 		/*unordered_map<string,_Function*>::iterator it;
 		for(it=Functions.begin(); it!=Functions.end(); it++)
 		{
@@ -32,7 +33,7 @@ translation_unit
 		}
 		cout <<"*************\n";*/
 		//_curr->print();	
-		if(!err)$1->print();
+		//if(!err)$1->print();
 		enable =1;
 	} 
 	| translation_unit function_definition 
@@ -43,8 +44,9 @@ translation_unit
 			it->second->print();
 		}
 		cout <<"*************\n";*/		
-		//_curr->print();		
-		if(!err)$2->print();		
+		//_curr->print();	
+		_prog->addm($2);	
+		//if(!err)$2->print();		
 		enable =1;
 	} 
         ;
@@ -52,6 +54,10 @@ translation_unit
 function_definition
 	: type_specifier fun_declarator compound_statement 
 	{
+		if($1!="void")
+		{
+			if(_curr->add_declaration(new _Identifier("ret_val",$1,0,4,g_off)));
+		}
 		if(Functions.insert(make_pair($2->id,_curr)).second)
 		{
 			$$=new method($2,$3);
@@ -69,19 +75,19 @@ type_specifier
 	: VOID 
 	{
 		$$="void";
-		if(enable==1){type_s = "void";enable = 0;}
+		if(enable==1){type_s = "void";enable = 0;g_off=8;}
 		else _vtype = "void";
 	}	
         | INT  
 	{
 		$$="int";
-		if(enable==1){type_s = "int";enable = 0;}
+		if(enable==1){type_s = "int";enable = 0;g_off=8;}
 		else _vtype = "int";
 	}
 	| FLOAT 
 	{
 		$$="float";
-		if(enable==1){type_s = "float";enable = 0;}
+		if(enable==1){type_s = "float";enable = 0;g_off=8;}
 		else _vtype = "float";
 	}
     ;
@@ -91,12 +97,14 @@ fun_declarator
 	{
 		_curr->change_fname($1);	
 		$$ = new identifier_ast($1);
+		g_off=-4;
 	}
         | IDENTIFIER '(' ')' 
 	{
 		_curr = new _Function(type_s,$1);
 		//cout<<$1<<endl;
 		$$ = new identifier_ast($1);
+		g_off=-4;
 		//_curr = $$;
 	}
 	;
@@ -121,7 +129,8 @@ parameter_list
 parameter_declaration
 	: type_specifier declarator 
 	{
-		$$=new _Identifier($2,$1,_dima);
+		$$=new _Identifier($2,$1,_dima,4,g_off);
+		g_off=g_off+4;
 		_dima=0;
 		if($1=="void"){cout<<no_lines<<": error : parameter type can't be void . \n";err=1;}
 		
@@ -902,7 +911,7 @@ declarator_list
 		}
 		else
 		{
-			if(_curr->add_declaration(new _Identifier($1,_vtype,_dima)));
+			if(_curr->add_declaration(new _Identifier($1,_vtype,_dima,4,g_off))){g_off-=4;}
 			else 
 			{
 				err=1;cout<<no_lines<<": error : redeclaration of variable "<<$1<<" in the scope of "<<_curr->token_name<<" . \n";
@@ -918,7 +927,7 @@ declarator_list
 		}
 		else
 		{
-			if(_curr->add_declaration(new _Identifier($3,_vtype,_dima)));
+			if(_curr->add_declaration(new _Identifier($3,_vtype,_dima,4,g_off))){g_off-=4;}
 			else 
 			{
 				err=1;cout<<no_lines<<": error : redeclaration of variable "<<$3<<" in the scope of "<<_curr->token_name<<" . \n";

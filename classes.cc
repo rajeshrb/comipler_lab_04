@@ -471,11 +471,29 @@ void method::print()
 	block->print();
 	cout<<"\n";
 }
-program::program(list<method *> *funlist):funs(funlist) {}
+program::program(method *M)
+{
+	funs.push_back(M);
+}
+void program::addm(method *M)
+{
+	funs.push_back(M);
+}
+
+void program::print()
+{
+	list<method *>::iterator it;
+	it=funs.begin();
+	for(;it!=funs.end();it++)
+	{
+		(*it)->print();
+		cout<<"****************\n";
+	}
+}
 
 /********** symbol table ***************/
 
-_Identifier::_Identifier(string var_name,string var_type,int d):type(var_type),token_name(var_name),dimension(d){}
+_Identifier::_Identifier(string var_name,string var_type,int d,int s,int off):type(var_type),token_name(var_name),dimension(d),size(s),offset(off){}
 
 void _Identifier::print()
 {
@@ -488,7 +506,7 @@ void _Identifier::print()
 	{
 		cout<<")";
 	}
-	cout<<" "<<token_name<<endl;
+	cout<<" "<<token_name<<" "<<size <<" "<<offset<<endl;
 }
 
 _Function::_Function(string func_type,string func_name):type(func_type), token_name(func_name){}
