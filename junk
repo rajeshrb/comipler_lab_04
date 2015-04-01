@@ -1,3 +1,3 @@
 4 : error : type mismatch . addition between int* and int. 
-4 : error : expected right operand type is int but given is : .
+6: error : Array index exceeded.
 error : programme rejecteed

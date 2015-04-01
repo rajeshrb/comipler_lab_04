@@ -231,7 +231,6 @@ assignment_statement
 	} 								
 	|  l_expression '=' expression ';'
 	{
-		
 		if(($1->_ftype[$1->_ftype.size()-1] == '+' ) || ($3->_ftype[$3->_ftype.size()-1] == '+' )) $$=new ass_ast($1,$3);
 		else
 		{
@@ -254,7 +253,11 @@ assignment_statement
 						$$ = new ass_ast($1,$3);
 					}
 					else {
-						cout<<no_lines<<" : error : expected right operand type is "<<$1->_type<<" but given is : "<<$3->_type<<".\n";
+						if(!(($3->_ftype!="\0") || ($1->_ftype != "\0")))
+						{
+							cout<<no_lines<<" : error : expected right operand type is "<<$1->_type<<" but given is : "<<$3->_type<<".\n";
+						}
+						
 						err=1;
 						$$ = new ass_ast($1,$3);
 						}
@@ -753,12 +756,14 @@ postfix_expression
 primary_expression
 	: l_expression
 	{
-		$$ = $1;
+		
 		if($1->_ftype[$1->_ftype.size()-1] == '+')
 		{
 			cout<<no_lines<<": error : Array index exceeded.\n";
 			err=1;
+			$$ = $1;
 		}
+		else $$ = $1;
 	}
     | l_expression '=' expression 				// added this production
 	{
@@ -766,34 +771,38 @@ primary_expression
 		{
 			cout<<no_lines<<": error : Array index exceeded.\n";
 			err=1;
-		}
-		if($1->_ftype == $3->_ftype)
-		{ 
 			$$ = new assign_ast($1,$3);
-			$$->_type=$3->_ftype;
-			$$->_ftype=$3->_ftype;
 		}
 		else
 		{
-			if($1->_ftype == "int" and $3->_ftype=="float")
-			{
-				$3->_ftype="int";
-				$1->num = (int)($3->num);
+			if($1->_ftype == $3->_ftype)
+			{ 
 				$$ = new assign_ast($1,$3);
+				$$->_type=$3->_ftype;
+				$$->_ftype=$3->_ftype;
 			}
-			else 
+			else
 			{
-				if($1->_ftype == "float" and $3->_ftype=="int")
+				if($1->_ftype == "int" and $3->_ftype=="float")
 				{
-					$3->_ftype="float";
-					$1->num = (float)($3->num);
+					$3->_ftype="int";
+					$1->num = (int)($3->num);
 					$$ = new assign_ast($1,$3);
 				}
 				else 
 				{
-					cout<<no_lines<<" : error : expected right operand type is "<<$1->_type<<" but given is "<<$3->_type<<".\n";
-					err=1;
-					$$ = new assign_ast($1,$3);
+					if($1->_ftype == "float" and $3->_ftype=="int")
+					{
+						$3->_ftype="float";
+						$1->num = (float)($3->num);
+						$$ = new assign_ast($1,$3);
+					}
+					else 
+					{
+						cout<<no_lines<<" : error : expected right operand type is "<<$1->_type<<" but given is "<<$3->_type<<".\n";
+						err=1;
+						$$ = new assign_ast($1,$3);
+					}
 				}
 			}
 		}
