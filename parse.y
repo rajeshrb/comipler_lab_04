@@ -232,32 +232,36 @@ assignment_statement
 	|  l_expression '=' expression ';'
 	{
 		
-		$$ = new ass_ast($1,$3);
-		
-		if($1->_ftype == $3->_ftype);
-		
+		if(($1->_ftype[$1->_ftype.size()-1] == '+' ) || ($3->_ftype[$3->_ftype.size()-1] == '+' )) $$=new ass_ast($1,$3);
 		else
 		{
-			if($1->_ftype == "int" and $3->_ftype=="float")
+			if($1->_ftype == $3->_ftype) $$ = new ass_ast($1,$3);
+		
+			else
 			{
-				$3->_ftype="int";
-				$1->num = (int)($3->num);
-				//$$ = new ass_ast($1,$3);
-			}
-			else 
-			{
-				if($1->_ftype == "float" and $3->_ftype=="int")
+				if($1->_ftype == "int" and $3->_ftype=="float")
 				{
-					$3->_ftype="float";
-					$1->num = (float)($3->num);
-					//$$ = new ass_ast($1,$3);
+					$3->_ftype="int";
+					$1->num = (int)($3->num);
+					$$ = new ass_ast($1,$3);
 				}
-				else {
-					cout<<no_lines<<" : error : expected right operand type is "<<$1->_type<<" but given is "<<$3->_type<<".\n";
-					err=1;
+				else 
+				{
+					if($1->_ftype == "float" and $3->_ftype=="int")
+					{
+						$3->_ftype="float";
+						$1->num = (float)($3->num);
+						$$ = new ass_ast($1,$3);
 					}
+					else {
+						cout<<no_lines<<" : error : expected right operand type is "<<$1->_type<<" but given is : "<<$3->_type<<".\n";
+						err=1;
+						$$ = new ass_ast($1,$3);
+						}
+				}
 			}
 		}
+		
 
 	} 	
 	;
@@ -750,10 +754,19 @@ primary_expression
 	: l_expression
 	{
 		$$ = $1;
+		if($1->_ftype[$1->_ftype.size()-1] == '+')
+		{
+			cout<<no_lines<<": error : Array index exceeded.\n";
+			err=1;
+		}
 	}
-        | l_expression '=' expression 				// added this production
+    | l_expression '=' expression 				// added this production
 	{
-		
+		if($1->_ftype[$1->_ftype.size()-1] == '+')
+		{
+			cout<<no_lines<<": error : Array index exceeded.\n";
+			err=1;
+		}
 		if($1->_ftype == $3->_ftype)
 		{ 
 			$$ = new assign_ast($1,$3);
@@ -810,7 +823,7 @@ primary_expression
 	;
 
 l_expression
-        : IDENTIFIER
+    : IDENTIFIER
 	{
 		$$ = new identifier_ast($1);
 		unordered_map<string,_Identifier*>::const_iterator got1=(_curr->parameters).find($1);
@@ -820,7 +833,7 @@ l_expression
 			if(got2 == (_curr->declarations).end())
 			{
     				cout <<no_lines<<" : error : Variable "<<$1<<" not declared In this scope . \n";
-				err=1;
+					err=1;
 			}
 			else
 			{
@@ -831,27 +844,30 @@ l_expression
 		}
  		 else
     		{	
-			//$$ = new identifier_ast($1);
-			//cout<<"1 :"<<(got->second)->type<<endl;
-			_vtype=got1->second->type;
+				$$ = new identifier_ast($1);
+				//cout<<"1 :"<<(got1->second)->type<<endl;
+				_vtype=got1->second->type;
 				int s=got1->second->dimension;
 				for(int i=0; i<s; i++) _vtype+="*";
 
 		}
+		//cout<<"Type :"<<$1<<" "<<_vtype<<endl;
 		$$->_type=_vtype;
 		$$->_ftype=_vtype;
 		
 	}
-        | l_expression '[' expression ']' 
+    | l_expression '[' expression ']' 
 	{
-		//_dima++;
-		$$ = new index_ast($1,$3);
+		
 		int k=_vtype.size()-1;
 		if(k>=0 && _vtype[k]=='*') _vtype=_vtype.substr(0,k);
+		else {_vtype=_vtype+"+";}
+		//cout<<$1->_ftype<<" ***"<<_vtype<<endl;
+		$$ = new index_ast($1,$3);
 		$$->_type=_vtype;
-		$$->_ftype=_vtype;
+		$$->_ftype=_vtype; 
 	}
-		
+		 
         ;
 expression_list
         : expression

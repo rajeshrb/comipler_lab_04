@@ -1,44 +1,6 @@
-int f(int x,float y)
+int main()
 {
-	int a,b,c[5][4];
-	a=4;
-	b=5;
-        c[4][2]=b;
-	return a+b;
-}
-
-float g(int i)
-{
-return i;
-}
-
-int ain(int a[4][5],float b)
-{
-	int x,y,i,j;
-	float z;
-	x=z;
-	y=a[2][3]+b;
-	z=f(a[4][2],y);
-	if(x==b)
-	{
-	x=x+z;
-	}
-	else ;
-
-	for(i=0;i<3.5;i++)
-	{
-		for(j=0;j<5;j++)
-		{
-		a[i][j]=i*j;
-		}
-	}
-	z=g(6);
-	while(i>3)
-	{
-	b=a[3][j];
-	c=i++;
-	}
-	
-
-	return g(b);
+	int a,b[4][5];
+	a=b[2]+a;
+	return 0;
 }

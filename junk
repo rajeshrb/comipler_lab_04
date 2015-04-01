@@ -1,2 +1,3 @@
-39 : error : Variable c not declared In this scope . 
- exit: main not defined
+4 : error : type mismatch . addition between int* and int. 
+4 : error : expected right operand type is int but given is : .
+error : programme rejecteed
