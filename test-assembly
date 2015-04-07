@@ -1,8 +1,14 @@
+void f()
+{
+	int a,b;
+	float d;
+	d=a+b;
+}
 int main()
 {
 	int a,b[4][5];
-	a=b[2]+a;
+	a=b[2][6]+a;
 	a=b[2][3]+b[3][3];
-	a=b[2][3][4];
+	a=b[2][4];
 	return 0;
 }

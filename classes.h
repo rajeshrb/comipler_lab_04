@@ -364,10 +364,9 @@ class _Identifier               /* variable */
     public:
         string type;        
         string token_name;
-        int dimension;
         int size;
         int offset;
-        _Identifier(string,string,int,int,int);
+        _Identifier(string,string,int,int);
         void print();
 };
 

@@ -493,20 +493,12 @@ void program::print()
 
 /********** symbol table ***************/
 
-_Identifier::_Identifier(string var_name,string var_type,int d,int s,int off):type(var_type),token_name(var_name),dimension(d),size(s),offset(off){}
+_Identifier::_Identifier(string var_name,string var_type,int s,int off):type(var_type),token_name(var_name),size(s),offset(off){}
 
 void _Identifier::print()
 {
-	for(int i=0;i<dimension;i++)
-	{
-		cout<<"(array ";
-	}
-	cout<<type;
-	for(int i=0;i<dimension;i++)
-	{
-		cout<<")";
-	}
-	cout<<" "<<token_name<<" "<<size <<" "<<offset<<endl;
+
+	cout<<type<<" "<<token_name<<" "<<size <<" "<<offset<<endl;
 }
 
 _Function::_Function(string func_type,string func_name):type(func_type), token_name(func_name){}

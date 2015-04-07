@@ -1,3 +1,15 @@
-4 : error : type mismatch . addition between int* and int. 
-6: error : Array index exceeded.
-error : programme rejecteed
+Function : Id "f"
+(BLOCK [
+        (Assign_Exp(Id "d")(TO_float(PLUS_int (Id "a") (Id "b"))))
+        ])
+
+****************
+Function : Id "main"
+(BLOCK [
+        (Assign_Exp(Id "a")(PLUS_int (Index (Index (Id "b") (IntConst 2)) (IntConst 6)) (Id "a")))
+        (Assign_Exp(Id "a")(PLUS_int (Index (Index (Id "b") (IntConst 2)) (IntConst 3)) (Index (Index (Id "b") (IntConst 3)) (IntConst 3))))
+        (Assign_Exp(Id "a")(Index (Index (Id "b") (IntConst 2)) (IntConst 4)))
+        (Return_Exp(IntConst 0))
+        ])
+
+****************
