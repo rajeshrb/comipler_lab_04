@@ -33,6 +33,7 @@ class abstract_astnode
 class StmtAst : public abstract_astnode
 {
 public:
+    int ret_v;
     virtual void print() {} ;
     StmtAst(){}
 };
