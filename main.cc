@@ -9,12 +9,12 @@ int main (int argc, char** arg)
   parser.parse();
   if(Functions.find("main")!=Functions.end())
   {
-  		if(err) cout<<"error : programme rejecteed\n";
+  		if(err) cout<<"error: programme rejecteed\n";
   		else _prog->print();
   }
   else
   {
-  		cout<<" exit: main not defined\n";
+  		cout<<"exit: main not defined\n";
   }
 }
 

@@ -1,3 +1,2 @@
-26: error : Array index exceeded.
-error: There is no return expression in Function main. 
-error : programme rejecteed
+25: error : called object b is not a function or function pointer
+error: programme rejecteed

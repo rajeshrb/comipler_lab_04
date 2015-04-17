@@ -23,7 +23,7 @@ int main()
 	float e,f[6];
 
 	a=b+b(c[2][5],e);
-	b=b*(a+c[2][3][5])/e;
+	b=b*(a+c[2][3])/e;
 	if(b==0)
 	{
 		for(i=0;i<4;i++)
@@ -40,5 +40,5 @@ int main()
 			i=i++;
 		}
 	}
-
+return 0;
 }

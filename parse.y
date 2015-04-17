@@ -691,74 +691,94 @@ postfix_expression
         | IDENTIFIER '(' ')'
 	{
 		$$ = new funcall_ast(new exps(NULL),new identifier_ast($1));
-		
-		unordered_map<string,_Function *>::const_iterator got = Functions.find ($1);
-		if ( got == Functions.end() )
-			{
-    				cout <<no_lines<<": error : Function "<<$1<<" not declared in the scope. \n";
-				err=1;
-			}
- 		 else
-    		{	
-			if(got->second->parameters.empty())
-			{
+		unordered_map<string,_Identifier*>::const_iterator got1=(_curr->parameters).find($1);
+		unordered_map<string,_Identifier*>::const_iterator got2=(_curr->declarations).find($1);
+		if ( (got1 ==(_curr->parameters).end()) && (got2==(_curr->declarations).end()))
+		{
+			unordered_map<string,_Function *>::const_iterator got = Functions.find ($1);
+			if ( got == Functions.end() )
+				{
+	    				cout <<no_lines<<": error : Function "<<$1<<" not declared in the scope. \n";
+					err=1;
+				}
+	 		 else
+	    		{	
+				if(got->second->parameters.empty())
+				{
 					
-				$$->_type=(got->second)->type;
-				$$->_ftype=(got->second)->type;
-			}
-			else
-			{
-				cout<<no_lines<<": error : "<<$1<<" expects zero arguments.\n";
+					$$->_type=(got->second)->type;
+					$$->_ftype=(got->second)->type;
+				}
+				else
+				{
+					cout<<no_lines<<": error : "<<$1<<" expects zero arguments.\n";
+				}
 			}
 		}
+		else
+		{
+			cout<<no_lines<<": error : called object "<<$1<<" is not a function or function pointer\n";
+			err=1;
+		} 
 		//$$->print();
 	}
 	| IDENTIFIER '(' expression_list ')' 
 	{
 		$$ = new funcall_ast($3,new identifier_ast($1));
-		list<ExpAst*> larg=$3->Elist;
-		unordered_map<string,_Function *>::const_iterator got = Functions.find ($1);
-		if (got != Functions.end() )
+		$$ = new funcall_ast(new exps(NULL),new identifier_ast($1));
+		unordered_map<string,_Identifier*>::const_iterator got1=(_curr->parameters).find($1);
+		unordered_map<string,_Identifier*>::const_iterator got2=(_curr->declarations).find($1);
+		if ( (got1 ==(_curr->parameters).end()) && (got2==(_curr->declarations).end()))
 		{
-			if(larg.size()==got->second->parameters.size())    			
+			list<ExpAst*> larg=$3->Elist;
+			unordered_map<string,_Function *>::const_iterator got = Functions.find ($1);
+			if (got != Functions.end() )
 			{
-				list<ExpAst*>::iterator it=larg.begin();
-				map<int,string>::iterator iter=got->second->parameters_pos.begin();
+				if(larg.size()==got->second->parameters.size())    			
+				{
+					list<ExpAst*>::iterator it=larg.begin();
+					map<int,string>::iterator iter=got->second->parameters_pos.begin();
 			
-				bool compat=1;
-				for(;it!=  larg.end() && iter!=got->second->parameters_pos.end(); it++,iter++)
-				{
-					bool found=0;
-					string lstr=(*it)->_ftype, rstr=iter->second;					
-					if(lstr==rstr) found=1;
-					else
+					bool compat=1;
+					for(;it!=  larg.end() && iter!=got->second->parameters_pos.end(); it++,iter++)
 					{
-						if(lstr=="int" && rstr=="float") {(*it)->_ftype = "float";found=1;}
-						else if(lstr=="float" && rstr=="int") {(*it)->_ftype = "int";found=1;}
+						bool found=0;
+						string lstr=(*it)->_ftype, rstr=iter->second;					
+						if(lstr==rstr) found=1;
+						else
+						{
+							if(lstr=="int" && rstr=="float") {(*it)->_ftype = "float";found=1;}
+							else if(lstr=="float" && rstr=="int") {(*it)->_ftype = "int";found=1;}
+						}
+						compat=compat && found;
+						if(!compat) break;
+					}		  				
+					if(!compat)
+					{
+						cout <<no_lines<<": error : Function "<<$1<<" argument type mismatch . \n";
+						err=1;
 					}
-					compat=compat && found;
-					if(!compat) break;
-				}		  				
-				if(!compat)
+				
+				}
+				else
 				{
-					cout <<no_lines<<": error : Function "<<$1<<" argument type mismatch . \n";
+					cout<<no_lines<<": error : number of arguments mismatch .\n";
 					err=1;
 				}
-				
+				$$->_type=(got->second)->type;
+				$$->_ftype=(got->second)->type;
 			}
-			else
-			{
-				cout<<no_lines<<": error : number of arguments mismatch .\n";
+	 		else
+	    		{
+				cout<<no_lines<<": error : the function "<<$1<<" is not defined In This Scope.\n"<<endl;
 				err=1;
 			}
-			$$->_type=(got->second)->type;
-			$$->_ftype=(got->second)->type;
 		}
- 		else
-    		{
-			cout<<no_lines<<": error : the function "<<$1<<" is not defined In This Scope.\n"<<endl;
+		else
+		{
+			cout<<no_lines<<": error : called object "<<$1<<" is not a function or function pointer\n";
 			err=1;
-		}
+		} 
 				
 	}
 	| l_expression INC_OP
